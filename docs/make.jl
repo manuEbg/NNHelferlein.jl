@@ -15,13 +15,13 @@ makedocs(modules = [NNHelferlein],
                   ],
          #          # Use clean URLs, unless built as a "local" build
           html_prettyurls = false, #!("local" in ARGS),
-          html_canonical = "https://andreasdominik.github.io/NNHelferlein.jl/stable/"
+          html_canonical = "https://KnetML.github.io/NNHelferlein.jl/stable/"
          )
 
 deploydocs(
     # root   = "<current-directory>",
     target = "build",
-    repo   = "github.com/andreasdominik/NNHelferlein.jl.git",
+    repo   = "github.com/KnetML/NNHelferlein.jl.git",
     branch = "gh-pages",
     # deps   = nothing | <Function>,
     # make   = nothing | <Function>,
