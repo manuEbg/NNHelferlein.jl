@@ -130,9 +130,9 @@ using Statistics: mean
 # datasets:
 @show include("datasets.jl")
 @test test_mit_nsr_download()
-@test test_mit_nsr_saved()
-@test dataset_mnist()
-@test dataset_iris()
+# @test test_mit_nsr_saved()
+@test test_dataset_mnist()
+@test test_dataset_iris()
 
 
 # test Conv, Dense and tb_train():
