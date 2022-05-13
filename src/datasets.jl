@@ -97,19 +97,26 @@ end
 const MNIST_DIR = "mnist"
 
 """
-    function dataset_iris(; force=false)
+    function dataset_mnist(; force=false)
 
-Download the MNIST dataset with help of `MLDatasets.jl`.
+Download the MNIST dataset with help of `MLDatasets.jl` from 
+Yann LeCun's official website.
 4 arrays `xtrn, ytrn, xtst, ytst` are returned. In the 
 teaching input (i.e. `y`) the digit `0` is encoded as `10`.
 
 The data is stored in the *Helferlein* data directory and only downloaded
 the files are not already saved.
 
+Ref.:  Y. LeCun, L. Bottou, Y. Bengio, and P. Haffner.
+"Gradient-based learning applied to document recognition."
+*Proceedings of the IEEE,* 86(11):2278-2324, November 1998      
+<http://yann.lecun.com/exdb/mnist/>.
+
+
 ### Arguments:
 + `force=false`: if `false`, the dataset download will be forced.
 """
-function dataset_iris(; force=false)
+function dataset_mnist(; force=false)
 
     mnist_dir = joinpath(NNHelferlein.DATA_DIR, MNIST_DIR)
 
@@ -124,4 +131,29 @@ function dataset_iris(; force=false)
     ytst[ytst.==0] .= 10
     
     return xtrn, ytrn, xtst, ytst
+end
+
+
+
+# IRIS data:
+#
+#
+#
+const IRIS_DIR = "iris"
+const IRIS_CSV = "iris150.csv"
+
+"""
+    function dataset_iris()
+
+Return Fisher's *iris* dataset of 150 records as dataframe.
+
+Ref: Fisher,R.A. 
+     "The use of multiple measurements in taxonomic problems" 
+     *Annual Eugenics*, 7, Part II, 179-188 (1936); 
+     also in "Contributions to Mathematical Statistics" (John Wiley, NY, 1950).     
+     <https://archive.ics.uci.edu/ml/datasets/Iris>
+"""
+function dataset_iris()
+
+    return dataframe_read(joinpath(NNHelferlein.DATA_DIR, IRIS_DIR, IRIS_CSV))
 end

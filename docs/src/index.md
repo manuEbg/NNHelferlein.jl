@@ -248,6 +248,8 @@ package. Maybe more will follow...
 
 + the famous *MNIST* dataset.
 
++ R.A. Fisher's *Iris* dataset.
+
 ## API Reference
 
 ```@contents
