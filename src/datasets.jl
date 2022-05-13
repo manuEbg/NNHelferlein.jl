@@ -30,9 +30,7 @@ function download_mit_nsr(records; force=false, dir=joinpath(NNHelferlein.DATA_D
         mkpath(dir)
     end
 
-    println(records)
     for (i, record) in enumerate(records)
-    println(record)
 
         local_file = joinpath(dir, record)
         url = "$URL_DATA_NSR_BEATS/$record?download=1"
