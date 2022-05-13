@@ -246,7 +246,7 @@ package. Maybe more will follow...
   Physionet dataset, adapted for use in machine leraning
   (see the docstring of `dataset_mit_nsr()` for details).
 
-
++ the famous *MNIST* dataset.
 
 ## API Reference
 

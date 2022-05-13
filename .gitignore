@@ -11,6 +11,7 @@ examples/Untitled*
 data/Tatoeba
 data/MIT-normal_sinus_rhythm
 data/pretrained
+data/mnist
 test/logs
 codecov.token
 logs

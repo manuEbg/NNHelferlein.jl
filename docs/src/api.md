@@ -208,4 +208,5 @@ emptyCuArray
 
 ```@docs
 dataset_mit_nsr
+dataset_mnist
 ```

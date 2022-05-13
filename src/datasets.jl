@@ -3,6 +3,11 @@
 
 const ZENODO_URL = "https://zenodo.org"
 
+# ECG data: MIT Normal Sinus Rhythm database:
+#
+#
+#
+
 # download ECG data:
 #
 const ZENODO_DATA_NSR_BEATS = "6526342"   # Zenodo identifier
@@ -78,4 +83,45 @@ function dataset_mit_nsr(; force=false)
     download_mit_nsr(force=force)
     dataframes = [read_ecg(record) for record in RECORDS]
     return dataframes
+end
+
+
+
+
+
+# MNIST data:
+#
+#
+#
+
+const MNIST_DIR = "mnist"
+
+"""
+    function dataset_iris(; force=false)
+
+Download the MNIST dataset with help of `MLDatasets.jl`.
+4 arrays `xtrn, ytrn, xtst, ytst` are returned. In the 
+teaching input (i.e. `y`) the digit `0` is encoded as `10`.
+
+The data is stored in the *Helferlein* data directory and only downloaded
+the files are not already saved.
+
+### Arguments:
++ `force=false`: if `false`, the dataset download will be forced.
+"""
+function dataset_iris(; force=false)
+
+    mnist_dir = joinpath(NNHelferlein.DATA_DIR, MNIST_DIR)
+
+    if force && isdir(mnist_dir)
+        rm(mnist_dir, force=true, recursive=true)
+    end
+
+    xtrn,ytrn = MNIST.traindata(Float32, dir=mnist_dir)
+    ytrn[ytrn.==0] .= 10
+    
+    xtst,ytst = MNIST.testdata(Float32, dir=mnist_dir)
+    ytst[ytst.==0] .= 10
+    
+    return xtrn, ytrn, xtst, ytst
 end

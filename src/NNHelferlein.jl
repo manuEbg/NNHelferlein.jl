@@ -19,6 +19,7 @@ using Knet #: KnetArray, Param, @diff
 import Images, Colors
 import Augmentor
 import MLDataUtils
+using MLDatasets: MNIST
 using TensorBoardLogger, Logging
 import MLBase: confusmat
 # TODO: tidy-up!
@@ -88,6 +89,6 @@ export DNN, Classifier, Regressor, Chain, VAE,          # chains
        print_network,
        DATA_DIR, #, download_example_data, download_pretrained
        confusion_matrix,
-       dataset_mit_nsr
+       dataset_mit_nsr, dataset_iris
 
 end # module
