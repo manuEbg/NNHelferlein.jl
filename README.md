@@ -5,6 +5,12 @@ Collection of little helpers to simplify various Machine Learning tasks
 The German word *Helferlein* means something like *little helper*;
 please pronounce it like `hell-fur-line`.
 
+The package follows mainly the Knet-style; i.e. all networks can be trained with the Knet-iterators, all layers can be used together with Knet-style quickly-self-written layers, all Knet-networks can be trained with tb_train(), all data providers can be used together, ...
+
+The high-level API makes its possible to define and train neural networks in less
+lines of code and even more intuitively as with frameworks like TensorFlow or 
+PyTorch.
+
 See documentation and examples for a first intro.
 
 <!---
