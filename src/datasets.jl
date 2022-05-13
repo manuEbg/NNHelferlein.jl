@@ -13,16 +13,16 @@ const ZENODO_URL = "https://zenodo.org"
 const ZENODO_DATA_NSR_BEATS = "6526342"   # Zenodo identifier
 
 const URL_DATA_NSR_BEATS = "$ZENODO_URL/record/$ZENODO_DATA_NSR_BEATS/files"
-const RECORDS = ["16265.ecg.gz", "16272.ecg.gz", "16273.ecg.gz", "16420.ecg.gz",
-    "16483.ecg.gz", "16539.ecg.gz", "16773.ecg.gz", "16786.ecg.gz",
-    "16795.ecg.gz", "17052.ecg.gz", "17453.ecg.gz", "18177.ecg.gz",
-    "18184.ecg.gz", "19088.ecg.gz", "19090.ecg.gz", "19093.ecg.gz",
-    "19140.ecg.gz", "19830.ecg.gz"]
+const MIT_NSR_RECORDS = ["16265", "16272", "16273", "16420",
+    "16483", "16539", "16773", "16786",
+    "16795", "17052", "17453", "18177",
+    "18184", "19088", "19090", "19093",
+    "19140", "19830"]
 
 const MIT_NSR_DIR = "MIT-normal_sinus_rhythm"
 
 
-function download_mit_nsr(; force=false, dir=joinpath(NNHelferlein.DATA_DIR, MIT_NSR_DIR))
+function download_mit_nsr(records; force=false, dir=joinpath(NNHelferlein.DATA_DIR, MIT_NSR_DIR))
 
     println("Downloading MIT-Normal Sinus Rhythm Database from Zenodo ...")
 
@@ -30,13 +30,15 @@ function download_mit_nsr(; force=false, dir=joinpath(NNHelferlein.DATA_DIR, MIT
         mkpath(dir)
     end
 
-    for (i, record) in enumerate(RECORDS)
+    println(records)
+    for (i, record) in enumerate(records)
+    println(record)
 
         local_file = joinpath(dir, record)
         url = "$URL_DATA_NSR_BEATS/$record?download=1"
 
         if !isfile(local_file) || force
-            println("  downloading $i of $(length(RECORDS)): $record"); flush(stdout)
+            println("  downloading $i of $(length(records)): $record"); flush(stdout)
             download(url, local_file)
         else
             println("  skiping download for record $record (use force=true to overwrite local copy)")
@@ -45,7 +47,7 @@ function download_mit_nsr(; force=false, dir=joinpath(NNHelferlein.DATA_DIR, MIT
 end
 
 """
-    function dataset_mit_nsr(; force=false)
+    function dataset_mit_nsr(records=nothing; force=false)
 
 Retrieve the Physionet ECG data set: "MIT-BIH Normal Sinus Rhythm Database".
 If necessary the data is downloaded from Zenodo (and stored in the *NNHelferlein*
@@ -67,10 +69,20 @@ suitable as playground data set for machine learning.
   "beat" and  "smooth".
 
 ### Arguments:
+
 + `force=false`: if `true` the download will be forced and local data will be 
         overwitten.
++ `records`: list of records names to be downloaded.
+
+### Examples:
+
+```juliaREPL
+nsr_16265 = dataset_mit_nsr("16265")
+nsr_16265 = dataset_mit_nsr(["16265", "19830")
+nsr_all = dataset_mit_nsr()
+```
 """
-function dataset_mit_nsr(; force=false)
+function dataset_mit_nsr(records=nothing; force=false)
 
     function read_ecg(record)
         fname = joinpath(NNHelferlein.DATA_DIR, MIT_NSR_DIR, record)
@@ -80,8 +92,16 @@ function dataset_mit_nsr(; force=false)
         return x
     end
 
-    download_mit_nsr(force=force)
-    dataframes = [read_ecg(record) for record in RECORDS]
+    if records == nothing
+        records = MIT_NSR_RECORDS
+    elseif records isa AbstractString
+        records = [records]
+    end
+
+    records = records .* ".ecg.gz"
+
+    download_mit_nsr(records, force=force)
+    dataframes = [read_ecg(record) for record in records]
     return dataframes
 end
 
