@@ -134,6 +134,14 @@ function dataset_mnist(; force=false)
         rm(mnist_dir, force=true, recursive=true)
     end
 
+    # pre-download:
+    #
+    if !isdir(mnist_dir)
+        MNIST.download(mnist_dir, i_accept_the_terms_of_use=true)
+    end
+
+    # read:
+    #
     xtrn,ytrn = MNIST.traindata(Float32, dir=mnist_dir)
     ytrn[ytrn.==0] .= 10
     
