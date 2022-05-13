@@ -101,7 +101,17 @@ const MNIST_DIR = "mnist"
 
 Download the MNIST dataset with help of `MLDatasets.jl` from 
 Yann LeCun's official website.
-4 arrays `xtrn, ytrn, xtst, ytst` are returned. In the 
+4 arrays `xtrn, ytrn, xtst, ytst` are returned. 
+
+`xtrn` and `xtst` will be the images as a multi-dimensional
+array, and `ytrn` and `ytst` the corresponding labels as integers.
+
+The image(s) is/are returned in the horizontal-major memory layout as a single
+numeric array of eltype T. If T <: Integer, then all values will be within 0 and
+255, otherwise the values are scaled to be between 0 and 1. The integer values
+of the labels correspond 1-to-1 the digit that they represent.
+
+In the 
 teaching input (i.e. `y`) the digit `0` is encoded as `10`.
 
 The data is stored in the *Helferlein* data directory and only downloaded
@@ -148,10 +158,10 @@ const IRIS_CSV = "iris150.csv"
 Return Fisher's *iris* dataset of 150 records as dataframe.
 
 Ref: Fisher,R.A. 
-     "The use of multiple measurements in taxonomic problems" 
-     *Annual Eugenics*, 7, Part II, 179-188 (1936); 
-     also in "Contributions to Mathematical Statistics" (John Wiley, NY, 1950).     
-     <https://archive.ics.uci.edu/ml/datasets/Iris>
+"The use of multiple measurements in taxonomic problems" 
+*Annual Eugenics*, 7, Part II, 179-188 (1936); 
+also in "Contributions to Mathematical Statistics" (John Wiley, NY, 1950).     
+<https://archive.ics.uci.edu/ml/datasets/Iris>
 """
 function dataset_iris()
 
