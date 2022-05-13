@@ -20,7 +20,7 @@ CI badge
 
 # Installation
 
-The package is not yet released! Pleas install the legacy project at 
+The package is not yet released! Please install the legacy project at 
 <https://github.com/andreasdominik/NNHelferlein.jl>.
 
 ```Julia
