@@ -78,7 +78,7 @@ suitable as playground data set for machine learning.
 
 ```juliaREPL
 nsr_16265 = dataset_mit_nsr("16265")
-nsr_16265 = dataset_mit_nsr(["16265", "19830")
+nsr_16265 = dataset_mit_nsr(["16265", "19830"])
 nsr_all = dataset_mit_nsr()
 ```
 """
