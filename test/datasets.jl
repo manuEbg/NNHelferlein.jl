@@ -25,7 +25,7 @@ function test_dataset_mnist()
 end
 
 function test_dataset_iris()
-    iris = dataset_mit_nsr()
+    iris = dataset_iris()
 
     return DataFrames.nrow(iris) == 150
 end
