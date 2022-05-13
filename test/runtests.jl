@@ -131,6 +131,8 @@ using Statistics: mean
 @show include("datasets.jl")
 @test test_mit_nsr_download()
 @test test_mit_nsr_saved()
+@test dataset_mnist()
+@test dataset_iris()
 
 
 # test Conv, Dense and tb_train():
