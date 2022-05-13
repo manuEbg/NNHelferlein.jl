@@ -1,5 +1,9 @@
 # funs to test dataset availibility
 #
+# necessary to run downloads in a CI-env. w/o user interaction:
+#
+ENV["DATADEPS_ALWAYS_ACCEPT"] = true
+
 function test_mit_nsr_download()
     nsr = dataset_mit_nsr("16265"; force=true)
 
