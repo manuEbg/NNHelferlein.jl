@@ -12,7 +12,7 @@ with tb_train(), all data providers can be used together, ...
 ## Installation
 
 For installation please refer to the README @github:
-<https://github.com/andreasdominik/NNHelferlein.jl>
+<https://github.com/KnetML/NNHelferlein.jl>
 
 ## First Steps
 
