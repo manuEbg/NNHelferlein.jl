@@ -10,7 +10,6 @@ using Statistics: mean, std
 using ProgressMeter, Dates
 using IterTools: ncycle, takenth
 import CSV
-# import OdsIO    # removed because of PyCall incompatibilities!
 import DataFrames
 import Random
 using Printf
@@ -88,7 +87,7 @@ export DNN, Classifier, Regressor, Chain, VAE,          # chains
        blowup_array, recycle_array,
        de_embed,
        print_network,
-       DATA_DIR, #, download_example_data, download_pretrained
+       DATA_DIR, 
        confusion_matrix,
        dataset_mit_nsr, dataset_iris, dataset_mnist
 
