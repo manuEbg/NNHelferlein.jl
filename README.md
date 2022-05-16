@@ -25,7 +25,7 @@ CI badge
 
 # Installation
 
-The package is not yet released! Fore the moment, 
+The package is not yet released! For the moment, 
 please install the project as 
 
 ```Julia
