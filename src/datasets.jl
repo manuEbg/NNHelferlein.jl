@@ -98,6 +98,8 @@ function dataset_mit_nsr(records=nothing; force=false)
 
     records = records .* ".ecg.gz"
 
+    
+    dataframes = nothing
     try
         download_mit_nsr(records, force=force)
         dataframes = [read_ecg(record) for record in records]
