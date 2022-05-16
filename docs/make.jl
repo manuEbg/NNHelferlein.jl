@@ -22,7 +22,7 @@ deploydocs(
     # root   = "<current-directory>",
     target = "build",
     repo   = "github.com/KnetML/NNHelferlein.jl.git",
-    branch = "gh-pages",
+    branch = "gh-pages"
     # deps   = nothing | <Function>,
     # make   = nothing | <Function>,
     # devbranch = "main",
