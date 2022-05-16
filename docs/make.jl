@@ -27,7 +27,7 @@ deploydocs(
     # make   = nothing | <Function>,
     devbranch = "main",
     devurl = "dev",
-    # versions = ["stable" => "v^", "v#.#", devurl => "dev"],
+    versions = ["stable" => "v^", "v#.#", devurl => "dev"],
     push_preview    = false,
     # repo_previews   = repo,
     # branch_previews = branch
