@@ -36,7 +36,7 @@ ZipFile = "a5390f91-8eb1-5f08-bee0-b1d1ffed6cea"
 [compat]
 julia = "1.7"
 Augmentor = "0.6"
-CSV = "0.1"
+CSV = "0.1 - 0.10"
 CUDA = "3.8"
 Colors = "0.12"
 DataFrames = "1.3"
