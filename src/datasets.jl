@@ -37,7 +37,7 @@ function download_mit_nsr(records; force=false, dir=joinpath(NNHelferlein.DATA_D
 
         if !isfile(local_file) || force
             println("  downloading $i of $(length(records)): $record"); flush(stdout)
-            download(url, local_file)
+            Downloads.download(url, local_file)
         else
             println("  skiping download for record $record (use force=true to overwrite local copy)")
         end
@@ -98,8 +98,13 @@ function dataset_mit_nsr(records=nothing; force=false)
 
     records = records .* ".ecg.gz"
 
-    download_mit_nsr(records, force=force)
-    dataframes = [read_ecg(record) for record in records]
+    try
+        download_mit_nsr(records, force=force)
+        dataframes = [read_ecg(record) for record in records]
+    catch
+        println("Error downloading dataset from Zenodo - please try again later!")
+        dataframes = nothing
+    end
     return dataframes
 end
 

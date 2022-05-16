@@ -22,6 +22,7 @@ import MLDataUtils
 using MLDatasets: MNIST
 using TensorBoardLogger, Logging
 import MLBase: confusmat
+import Download
 # TODO: tidy-up!
 
 include("types.jl")

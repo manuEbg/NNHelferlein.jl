@@ -325,7 +325,7 @@ function get_tatoeba_corpus(lang; force=false,
         url = join([url, fname])
         println("Downloading Tatoeba corpus for language $lang")
         println("from $url")
-        download(url, pathname)
+        Downloads.download(url, pathname)
     else
         println("Corpus for language $lang is already downloaded.")
     end
