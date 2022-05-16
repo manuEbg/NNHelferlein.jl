@@ -25,12 +25,12 @@ CI badge
 
 # Installation
 
-The package is not yet released! Please install the legacy project at 
-<https://github.com/andreasdominik/NNHelferlein.jl>.
+The package is not yet released! Fore the moment, 
+please install the project as 
 
 ```Julia
 using Pkg
-Pkg.add(url="https://github.com/andreasdominik/NNHelferlein.jl.git")
+Pkg.add(url="https://github.com/KnetML/NNHelferlein.jl.git")
 ```
 
 <!---
@@ -55,4 +55,4 @@ not-so-bad test coverage. If you see the tests passing in the moment,
 it may be save to use the helpers.
 
 As soon as dev. and tests are completed the package will be
-registered soon. 
+registered.
