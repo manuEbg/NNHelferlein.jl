@@ -3,21 +3,23 @@
 # (c) A. Dominik, 2020
 
 """
-    dataframe_read(fname)
+    dataframe_read(fname; o...)
 
 Read a data table from an CSV-file with one sample
 per row and return a DataFrame with the data.
 (ODS-support is removed because of PyCall compatibility issues
 of the OdsIO package).
+
+All keyword arguments accepted by CSV.File() can be used.
 """
-function dataframe_read(fname)
+function dataframe_read(fname; o...)
 
     if occursin(r".*\.ods$", fname)
         println("Reading ODS-files is no longer supported!")
         return nothing
         # return readODS(fname)
     elseif occursin(r".*\.csv$", fname)
-        return readCSV(fname)
+        return readCSV(fname; o...)
     else
         println("Error: unknown file format!")
         println("Please support csv file")
