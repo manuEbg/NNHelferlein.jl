@@ -285,10 +285,7 @@ function (vae::VAE)(x, y=nothing)
     
     # variate:
     #
-    ζ = randn(Float32, size(μ))
-    if CUDA.functional()
-        ζ = convert2KnetArray(ζ)
-    end
+    ζ = randn(Float32, size(μ))  |> ifgpu
     
     x = μ .+ ζ .* σ
     
@@ -304,7 +301,6 @@ function (vae::VAE)(x, y=nothing)
     if isnothing(y)
         return x
     else
-        n = length(x)
         loss = sum(abs2, x .- y) / 2
         loss_KL = -sum(1 .+ logσ² .- abs2.(μ) .- σ²) / 2
         return loss + loss_KL
