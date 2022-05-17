@@ -285,7 +285,7 @@ function (vae::VAE)(x, y=nothing)
     
     # variate:
     #
-    ζ = randn(Float32, size(μ))  |> ifgpu
+    ζ = oftype(μ, randn(Float32, size(μ)))
     
     x = μ .+ ζ .* σ
     
