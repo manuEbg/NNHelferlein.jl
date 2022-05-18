@@ -33,10 +33,10 @@ end
 #     return OdsIO.ods_read(fname, retType="DataFrame")
 # end
 
-function readCSV(fname)
+function readCSV(fname; o...)
 
     println("Reading data from CSV: $fname")
-    return DataFrames.DataFrame(CSV.File(fname, header=true))
+    return DataFrames.DataFrame(CSV.File(fname; o...))
 end
 
 
@@ -249,7 +249,7 @@ julia> tb_train!(mdl, Adam, MBNoiser(trn, σ=0.1))
 julia> mbs_noised = MBNoiser(mbs, 0.05)
 ```
 """
-struct MBNoiser
+struct MBNoiser  <: DataLoader
     mbs::Knet.Data
     size
     σ
