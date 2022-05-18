@@ -227,60 +227,6 @@ end
 
 
 
-""" 
-    type MBNoiser
-
-Iterator to wrap any Knet.Data iterator of minibatches in 
-order to add random noise.    
-Each value will be multiplied with a random value form 
-Gaussian noise with mean=1.0 and sd=sigma.
-
-### Construtors:
-    MBNoiser(mbs::Knet.Data, σ)
-    MBNoiser(mbs::Knet.Data; σ=1.0)
-
-+ `mbs`: iterator with minibatches
-+ `σ`: standard deviation for the Gaussian noise
-
-### Example:
-```juliaREPL
-julia> trn = minibatch(x)
-julia> tb_train!(mdl, Adam, MBNoiser(trn, σ=0.1))
-julia> mbs_noised = MBNoiser(mbs, 0.05)
-```
-"""
-struct MBNoiser  <: DataLoader
-    mbs::Knet.Data
-    size
-    σ
-    MBNoiser(mbs::Knet.Data, sd=1.0; σ=sd) = new(mbs, size(first(mbs)[1]), σ)
-end
-
-
-
-# first call:
-#
-function Base.iterate(nr::MBNoiser) 
-    return iterate(nr,0)
-end
-
-# subsequent calls with state:
-#
-function Base.iterate(nr::MBNoiser, state)
-    next_inner = iterate(nr.mbs, state)
-    if isnothing(next_inner)
-        return nothing
-    else
-        next_mb, next_state = next_inner
-        return (next_mb[1] .* convert2KnetArray(randn(nr.size) .* nr.σ .+ 1) , next_mb[2]), 
-                next_state
-    end
-end
-
-# and length = length of inner iterator:
-#
-Base.length(it::MBNoiser) = length(it.mbs)
-
 
 
 """
