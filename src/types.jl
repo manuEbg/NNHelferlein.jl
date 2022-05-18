@@ -7,6 +7,31 @@ abstract type Layer
 end
 
 
+""" 
+    abstract type RecurrentUnit end
+
+Supertype for all recurrent unit types.
+Self-defined recurrent units which are a child of `RecurrentUnit`
+can be used inside the 'Recurrent' layer.
+
+### Interface
+All subtypes of `RecurrentUnit` must provide the followning:
++ a constructor with signature `Type(n_inputs, n_units; kwargs)` and
+    arbitrary keyword arguments.
++ an implementation of signature `(o::Recurrent)(x)`
+    where `x` is a 3d- or 2d-array of shape [fan-in, mb-size, 1] or 
+    [fan-in, mb-size].
+    The function must return the result of one forward 
+    computation for one step and return the hidden state
+    and set the internal fields `h` and optionally `c`.
++ a field `h` (to store the last hidden state)
++ an optional field `c`, if the cell state is to be stored
+    such as in a lstm unit.
+"""
+abstract type RecurrentUnit end
+
+
+
 
 """
     abstract type DataLoader
@@ -128,10 +153,10 @@ julia> mbs_noised = MBNoiser(mbs, 0.05)
 ```
 """
 struct MBNoiser  <: DataLoader
-    mbs::Knet.Data
+    mbs::Union{Knet.Data, DataLoader}
     size
     σ
-    MBNoiser(mbs::Knet.Data, sd=1.0; σ=sd) = new(mbs, size(first(mbs)[1]), σ)
+    MBNoiser(mbs::Union{Knet.Data, DataLoader}, sd=1.0; σ=sd) = new(mbs, size(first(mbs)[1]), σ)
 end
 
 
@@ -161,25 +186,95 @@ Base.length(it::MBNoiser) = length(it.mbs)
 
 
 
-""" 
-    abstract type RecurrentUnit end
 
-Supertype for all recurrent unit types.
-Self-defined recurrent units which are a child of `RecurrentUnit`
-can be used inside the 'Recurrent' layer.
 
-### Interface
-All subtypes of `RecurrentUnit` must provide the followning:
-+ a constructor with signature `Type(n_inputs, n_units; kwargs)` and
-    arbitrary keyword arguments.
-+ an implementation of signature `(o::Recurrent)(x)`
-    where `x` is a 3d- or 2d-array of shape [fan-in, mb-size, 1] or 
-    [fan-in, mb-size].
-    The function must return the result of one forward 
-    computation for one step and return the hidden state
-    and set the internal fields `h` and optionally `c`.
-+ a field `h` (to store the last hidden state)
-+ an optional field `c`, if the cell state is to be stored
-    such as in a lstm unit.
 """
-abstract type RecurrentUnit end
+    struct MBMasquerade  <: DataLoader
+
+Iterator wrapper to partially mask training data of a minibatch 
+iterator of type `Knet.Data` or `NNHelferlein.DataLoader`.
+
+### Constructors:
+    Masquerade(it, rho=0.1; mode=:noise, value=0.0)
+    Masquerade(it; ρ=0.1, mode=:noise, value=0.0)
+
+The constructor may be called with the density `rho` as normal
+argument or `ρ` as keyword argument.
+
+### Arguments:
++ `it`: Minibatch iterator the must deliver (x,y)-tuples of 
+        minibatches
++ `ρ=0.1` or `rho`: Density of mask; a value of 1.0 will mask everything,
+        a value of 0.0 nothing.
++ `value=0.0`: the value with which the masking is done.
++ `mode=:noise`: type of masking:
+        * `:noise`: randomly distributed single values of the 
+            training data will be overwitten with `value`.
+        * `:patch`: a single rectangular region will be 
+            overwritten.
+
+### Examples:
+
+```juliaREPL
+julia> dtrn 
+26-element Knet.Train20.Data{Tuple{CuArray{Float32}, Array{UInt8}}}
+
+julia> mtrn = Masquerade(dtrn, 0.5, value=2.0, mode=:patch)
+Masquerade(26-element Knet.Train20.Data{Tuple{CuArray{Float32}, Array{UInt8}}}, 0.5, 2.0, :patch)
+
+julia> dmask = Masquerade(dtrn, ρ=0.3) |> x->Masquerade(x, ρ=0.3, value=1.0)
+Masquerade(Masquerade(26-element Knet.Train20.Data{Tuple{CuArray{Float32}, Array{UInt8}}}, 0.3, 0.0, :noise), 0.3, 1.0, :noise)
+```
+"""
+struct MBMasquerade  <: DataLoader
+    it::Union{Knet.Data, DataLoader}
+    ρ
+    value
+    mode
+    Masquerade(it::Union{Knet.Data, DataLoader}, rho=0.1; ρ=rho, mode=:noise, value=0.0) = 
+        new(it, ρ, value, mode)
+end
+
+function Base.iterate(it::MBMasquerade)
+    return iterate(it, 0)
+end
+
+function Base.iterate(it::MBMasquerade, state)
+    
+    next_inner = iterate(it.it, state)
+    if isnothing(next_inner)
+        return nothing
+    end
+    
+    (x,y), next_state = next_inner
+    
+    if it.mode == :noise
+        x = do_mask(x, it.ρ, it.value)
+    elseif it.mode == :patch
+        x = do_patch(x, it.ρ, it.value)
+    end
+    
+    return (ifgpu(x),y), next_state
+end
+
+Base.length(it::MBMasquerade) = length(it.it)
+
+
+
+function do_mask(x, ρ, value)
+    
+    mask = rand(size(x)...) .< ρ
+    x[mask] .= value
+    return x
+end
+
+function do_patch(x, ρ, value)
+    
+    p_size = size(x) .* ρ .|> ceil .|> Int
+    p_start = [rand(collect(1:s-p+1)) for (s,p) in zip(size(x), p_size) ]
+    p_end = p_start .+ p_size .- 1
+    ranges = ((i:j) for (i,j) in zip(p_start, p_end))
+
+    x[ranges...] .= value
+    return x
+end

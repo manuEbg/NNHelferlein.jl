@@ -69,7 +69,7 @@ export DNN, Classifier, Regressor, Chain, VAE,          # chains
        separate_heads, merge_heads,
        dataframe_read, dataframe_split,         # import data
        dataframe_minibatches, mk_class_ids,
-       MBNoiser,
+       MBNoiser, MBMasquerade,
        mk_image_minibatch,
        tb_train!,
        predict_top5, predict_imagenet,

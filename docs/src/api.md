@@ -98,6 +98,7 @@ dataframe_minibatches
 dataframe_split
 mk_class_ids
 MBNoiser
+MBMasquerade
 ```
 
 ## Image data
