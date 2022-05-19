@@ -3,7 +3,7 @@ using Documenter, NNHelferlein
 
 makedocs(modules = [NNHelferlein],
          clean = false,
-         assets = ["assets/favicon.ico"],
+         # assets = ["assets/favicon.ico"],
          sitename = "NNHelferlein.jl",
          authors = "Andreas Dominik",
          pages = [
@@ -14,8 +14,8 @@ makedocs(modules = [NNHelferlein],
                   "License" => "license.md"
                   ],
          #          # Use clean URLs, unless built as a "local" build
-          html_prettyurls = false, #!("local" in ARGS),
-          html_canonical = "https://KnetML.github.io/NNHelferlein.jl/stable/"
+         # html_prettyurls = false, #!("local" in ARGS),
+         # html_canonical = "https://KnetML.github.io/NNHelferlein.jl/stable/"
          )
 
 deploydocs(
