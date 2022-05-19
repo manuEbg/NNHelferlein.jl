@@ -154,11 +154,11 @@ julia> mbs_noised = MBNoiser(mbs, 0.05)
 """
 struct MBNoiser  <: DataLoader
     mbs::Union{Knet.Data, DataLoader}
-    size
     σ
-    MBNoiser(mbs::Union{Knet.Data, DataLoader}, sd=1.0; σ=sd) = new(mbs, size(first(mbs)[1]), σ)
+    MBNoiser(mbs::Union{Knet.Data, DataLoader}, sd=1.0; σ=sd) = new(mbs, σ)
 end
 
+# TODO: size on-the-fly
 
 
 # first call:
@@ -175,14 +175,21 @@ function Base.iterate(nr::MBNoiser, state)
         return nothing
     else
         next_mb, next_state = next_inner
-        return (next_mb[1] .* convert2KnetArray(randn(nr.size) .* nr.σ .+ 1) , next_mb[2]), 
-                next_state
+        return (do_noise(next_mb[1], nr.σ) , next_mb[2]), next_state
     end
 end
 
 # and length = length of inner iterator:
 #
 Base.length(it::MBNoiser) = length(it.mbs)
+
+
+# not exposed inner funs:
+#
+function do_noise(x, σ)
+    x = x .* ifgpu( randn(Float32, size(x)...) .* σ .+ 1 )
+    return(x)
+end
 
 
 
@@ -261,6 +268,8 @@ Base.length(it::MBMasquerade) = length(it.it)
 
 
 
+# not exposed inner funs:
+#
 function do_mask(x, ρ, value)
     
     mask = rand(size(x)...) .< ρ
