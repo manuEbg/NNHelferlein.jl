@@ -222,3 +222,17 @@ end
 
 
 
+# """
+#     struct BertEncoder
+# 
+# """
+# 
+# 
+# 
+# """
+#     struct BertDecoder
+# 
+# """
+
+
+
