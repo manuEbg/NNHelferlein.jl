@@ -12,14 +12,10 @@ lines of code and even more intuitively as with high-level (Python-) frameworks.
 
 See documentation and examples for a first intro.
 
-<!---
 [![](https://img.shields.io/badge/docs-stable-blue.svg)](https://KnetML.github.io/NNHelferlein.jl/stable)
---->
+
 [![](https://img.shields.io/badge/docs-latest-blue.svg)](https://KnetML.github.io/NNHelferlein.jl/dev)
-<!--
-CI badge
-[![Build Status](https://travis-ci.org/KnetML/NNHelferlein.jl.svg?branch=main)](https://travis-ci.org/KnetML/NNHelferlein.jl)
--->
+
 [![Tests](https://github.com/KnetML/NNHelferlein.jl/actions/workflows/run_tests.yml/badge.svg)](https://github.com/KnetML/NNHelferlein.jl/actions/workflows/run_tests.yml) [![codecov](https://codecov.io/gh/KnetML/NNHelferlein.jl/branch/main/graph/badge.svg?token=9R12TMSKP1)](https://codecov.io/gh/KnetML/NNHelferlein.jl)
 
 
@@ -28,31 +24,11 @@ CI badge
 The package is not yet released! For the moment, 
 please install the project as 
 
-```Julia
-using Pkg
-Pkg.add(url="https://github.com/KnetML/NNHelferlein.jl.git")
+```JuliaREPL
+] add NNHelferlein
 ```
-
-<!---
-Due to a backwards incompatibility with the dependency `AutoGrad.jl`, it is
-currently necessary to manually install the latest version of AutoGrad.jl instead
-of the released version 1.2.4 to be used with NNHelferlein:
-
-```Julia
+or
+```JuliaREPL
 using Pkg
-Pkg.add(url="https://github.com/andreasdominik/NNHelferlein.jl.git")
-Pgk.add(url="https://github.com/denizyuret/AutoGrad.jl.git")
+Pkg.add("NNHelferlein")
 ```
---->
-
-
-# Caveat:
-Please be aware that the package is still in development and
-not yet completely tested. You may already use it on own risk.
-
-While reading this, I must add: the package is *almost* ready with an
-not-so-bad test coverage. If you see the tests passing in the moment, 
-it may be save to use the helpers.
-
-As soon as dev. and tests are completed the package will be
-registered.
