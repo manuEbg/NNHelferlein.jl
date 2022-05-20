@@ -61,6 +61,7 @@ Softmax
 Dropout
 BatchNorm
 LayerNorm
+GaussianNoise
 ```
 
 
