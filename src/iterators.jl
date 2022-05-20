@@ -49,15 +49,16 @@ function split_minibatches(it, at=0.8; shuffle=true)
     n_trn = Int(round(length(states) * at))
         
     if n_trn == 0
-        trn_idx = []
-        vld_idx = states
+        n_trn = 1
+        #trn_idx = []
+        #vld_idx = states
     elseif n_trn == length(states)
-        trn_idx = states
-        vld_idx = []
-    else
-        trn_idx = states[1:n_trn]
-        vld_idx = states[n_trn+1:end]
+        n_trn = length(states) - 1
+        #trn_idx = states
+        #vld_idx = []
     end
+    trn_idx = states[1:n_trn]
+    vld_idx = states[n_trn+1:end]
     
     return PartialIterator(it, trn_idx, shuffle=shuffle), PartialIterator(it, vld_idx, shuffle=shuffle) 
 end

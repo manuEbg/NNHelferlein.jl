@@ -503,7 +503,6 @@ function predict(mdl; data, softmax=false)
     end
 end
 
-# TODO: predict sign, immwr mit Minibatch
 
 function predict(mdl, x; softmax=false )
     
@@ -515,4 +514,4 @@ function predict(mdl, x; softmax=false )
 end
 
 # TODO: add de_embed?
-
+# predict und docu testen!
