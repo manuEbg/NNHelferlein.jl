@@ -17,12 +17,12 @@ makedocs(modules = [NNHelferlein],
 deploydocs(
     repo   = "github.com/KnetML/NNHelferlein.jl.git",
     target = "build",
-    branch = "gh-pages"
+    branch = "gh-pages",
     # deps   = nothing | <Function>,
     # make   = nothing | <Function>,
-    # devbranch = "main",
+    devbranch = "main",
     # devurl = "dev",
-    # versions = ["stable" => "v^", "v#.#", devurl => "dev"],
+    versions = ["stable" => "v^", "v#.#", devurl => "dev"],
     # push_preview    = false,
     # repo_previews   = repo,
     # branch_previews = branch
