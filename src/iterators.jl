@@ -194,17 +194,17 @@ The constructor may be called with the density `rho` as normal
 argument or `ρ` as keyword argument.
 
 ### Arguments:
-+ `it`: Minibatch iterator the must deliver (x,y)-tuples of 
++ `it`: Minibatch iterator that must deliver (x,y)-tuples of 
         minibatches
 + `ρ=0.1` or `rho`: Density of mask; a value of 1.0 will mask everything,
         a value of 0.0 nothing.
 + `value=0.0`: the value with which the masking is done.
 + `mode=:noise`: type of masking:
-        * `:noise`: randomly distributed single values of the 
-                training data will be overwitten with `value`.
-        * `:patch`: a single rectangular region along the first two 
-                dimensions and covering all remaining dims 
-                will be overwritten.
+    + `:noise`: randomly distributed single values of the 
+            training data will be overwitten with `value`.
+    + `:patch`: a single rectangular region along the first two 
+            dimensions and covering all remaining dims 
+            will be overwritten.
 
 ### Examples:
 
