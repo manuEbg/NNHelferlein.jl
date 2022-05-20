@@ -1,5 +1,6 @@
 # ChangeLog of NNHelferlein package
 
+### v1.1.0
 + documentation for release added
 + split_minibatches() made stable (never returns an empty iterator)
 + docs slightly re-organised
