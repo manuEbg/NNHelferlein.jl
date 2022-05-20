@@ -1,5 +1,5 @@
 docs/build
-keys.txt
+deploy_keys.txt
 examples/.ipynb*
 examples/*Copy*.ipynb
 examples/logs/*
@@ -17,4 +17,5 @@ codecov.token
 logs
 .vscode
 try
+
 No-*
