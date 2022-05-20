@@ -66,7 +66,9 @@ function test_mlp()
 
         mlp = Regressor(Dense(8,8, actf=relu),
                          Dense(8,8),
+                         GaussianNoise(0.025),
                          Dense(8,1, actf=identity))
+        n = print_network(mlp)
 
         mlp = tb_train!(mlp, Adam, mb, epochs=10, acc_fun=nothing,
                 lr=0.001, lr_decay=0.0001, lrd_steps=5)

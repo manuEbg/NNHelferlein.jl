@@ -193,10 +193,10 @@ function test_split_mbs()
     vl1 = length(dvld)    # 1
 
     dtrn, dvld = split_minibatches(mbs, 0.0)
-    tl2 = length(dtrn)    # 0
-    vl2 = length(dvld)    # 7
+    tl2 = length(dtrn)    # 1, not 0 because never 0!
+    vl2 = length(dvld)    # 6
     
-    return tl1 == 6 && vl1 == 1 && tl2 == 0 && vl2 == 7
+    return tl1 == 6 && vl1 == 1 && tl2 == 1 && vl2 == 6
 end
 
 
