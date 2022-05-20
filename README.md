@@ -13,9 +13,7 @@ lines of code and even more intuitively as with high-level (Python-) frameworks.
 See documentation and examples for a first intro.
 
 [![](https://img.shields.io/badge/docs-stable-blue.svg)](https://KnetML.github.io/NNHelferlein.jl/stable)
-
 [![](https://img.shields.io/badge/docs-latest-blue.svg)](https://KnetML.github.io/NNHelferlein.jl/dev)
-
 [![Tests](https://github.com/KnetML/NNHelferlein.jl/actions/workflows/run_tests.yml/badge.svg)](https://github.com/KnetML/NNHelferlein.jl/actions/workflows/run_tests.yml) [![codecov](https://codecov.io/gh/KnetML/NNHelferlein.jl/branch/main/graph/badge.svg?token=9R12TMSKP1)](https://codecov.io/gh/KnetML/NNHelferlein.jl)
 
 
