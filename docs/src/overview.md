@@ -4,6 +4,7 @@ The section provides a brief overview of the functionality provided by
 NNHelferlen.
 For more details, please visit the API-Section.
 
+  
 ## Neural network definitions
 
 The abstract type `DNN` provides signatures to be called as
