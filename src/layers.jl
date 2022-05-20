@@ -604,8 +604,8 @@ end
 
 function (l::GaussianNoise)(x)
 
-    if AutoGrad.recording() || !train_only
-        return do_noise(x, σ)
+    if AutoGrad.recording() || !l.train_only
+        return do_noise(x, l.σ)
     else
         return x
     end
