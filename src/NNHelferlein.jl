@@ -26,6 +26,7 @@ import Downloads
 
 include("types.jl")
 include("util.jl")
+include("iterators.jl")
 include("nets.jl")
 include("layers.jl")
 include("attn.jl")
