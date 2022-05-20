@@ -114,6 +114,20 @@ to sequence or sequence-to-secuence minibatches.
 Also helpers for padding and truncating sequences are provided.
 
 
+## Minibatch iteration utilities
+
+A number of iterators are provided to wrap and manipulate minibatch
+iterators:
++ `PartialIterator(it, states)` returns an iterator that only
+        iterates the given `states` of iterator `it`.
++ `MBNoiser(it, σ)` applies Gaussian noise to the x-values of 
+        minibatches, provided by iterator `it`.
++ `MBMasquerade(it, ρ)` applies a mask to the x-values of 
+        minibatches, provided by iterator `it`.
+
+
+
+
 ## Working with pretrained networks
 
 Layers of pre-trained models can be created from TensorFlow

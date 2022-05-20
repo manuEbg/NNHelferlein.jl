@@ -161,6 +161,27 @@ function test_noiser()
 end
 
 
+function test_masquerade()
+    x = zeros(Float32, 100,100,20)
+    y = rand(1:10, 20)
+    mbs = minibatch(x, y, 10)
+
+    # test mode noise:
+    #
+    masked = MBMasquerade(mbs, ρ=0.5, value=1.0, mode=:noise)
+    (x,y) = first(masked)
+    @show n = sum(x)
+
+    # test mode patch:
+    #
+    masked = MBMasquerade(mbs, ρ=0.5, value=1.0, mode=:patch)
+    (x,y) = first(masked)
+    @show p = sum(x)
+
+    return isapprox(n, 50000, atol=2000) && isapprox(p, 50000, atol=2000)
+end
+
+
 
 function test_split_mbs()
     x = ones(Float32, 64, 1000)

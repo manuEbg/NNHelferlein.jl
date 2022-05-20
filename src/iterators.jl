@@ -137,9 +137,9 @@ julia> mbs_noised = MBNoiser(mbs, 0.05)
 ```
 """
 struct MBNoiser  <: DataLoader
-    mbs::Union{Knet.Data, DataLoader}
+    mbs
     σ
-    MBNoiser(mbs::Union{Knet.Data, DataLoader}, sd=0.01; σ=sd) = new(mbs, σ)
+    MBNoiser(mbs, sd=0.01; σ=sd) = new(mbs, σ)
 end
 
 # TODO: size on-the-fly
@@ -200,9 +200,10 @@ argument or `ρ` as keyword argument.
 + `value=0.0`: the value with which the masking is done.
 + `mode=:noise`: type of masking:
         * `:noise`: randomly distributed single values of the 
-            training data will be overwitten with `value`.
-        * `:patch`: a single rectangular region will be 
-            overwritten.
+                training data will be overwitten with `value`.
+        * `:patch`: a single rectangular region along the first two 
+                dimensions and covering all remaining dims 
+                will be overwritten.
 
 ### Examples:
 
@@ -218,12 +219,12 @@ Masquerade(Masquerade(26-element Knet.Train20.Data{Tuple{CuArray{Float32}, Array
 ```
 """
 struct MBMasquerade  <: DataLoader
-    it::Union{Knet.Data, DataLoader}
+    it
     ρ
     value
     mode
-    Masquerade(it::Union{Knet.Data, DataLoader}, rho=0.1; ρ=rho, mode=:noise, value=0.0) = 
-        new(it, ρ, value, mode)
+    MBMasquerade(it, rho=0.1; ρ=rho, mode=:noise, value=0.0) = 
+        new(it, ρ, Float32(value), mode)
 end
 
 function Base.iterate(it::MBMasquerade)
@@ -262,8 +263,24 @@ function do_mask(x, ρ, value)
 end
 
 function do_patch(x, ρ, value)
+
+    # last dim is always minibatch:
+    # apply to one dim data:
+    #
+    if ndims(x) == 2
+        p_size = [size(x,1) .* ρ .|> round .|> Int, size(x,2)]
     
-    p_size = size(x) .* ρ .|> ceil .|> Int
+    # apply to 2 and more-dim data# patch is always on the first
+    # 2 dims:
+    #
+    else
+        p_size = [size(x,1), size(x,2)] .* √ρ .|> round .|> Int
+        if ndims(x) > 2
+            p_size = vcat(p_size, [size(x)...][3:end])
+        end
+    end
+    p_size[p_size.==0] .= 1 
+
     p_start = [rand(collect(1:s-p+1)) for (s,p) in zip(size(x), p_size) ]
     p_end = p_start .+ p_size .- 1
     ranges = ((i:j) for (i,j) in zip(p_start, p_end))
