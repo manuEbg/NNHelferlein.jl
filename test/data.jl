@@ -150,16 +150,16 @@ function test_noiser()
 
     noise = MBNoiser(mbs)
     d = first(noise)[1]
-    s = Statistics.std(d)
 
     i = 0
     for (x,y) in noise
         i += 1
     end
     
-    return i == length(noise) && isapprox(s, 1, atol=0.1)
+    return i == length(noise) 
 end
 
+test_noiser()
 
 function test_masquerade()
     x = zeros(Float32, 100,100,20)
