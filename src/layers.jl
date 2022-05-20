@@ -583,7 +583,38 @@ function Base.summary(l::LayerNorm; indent=0)
     return print_summary_line(indent, s1, n)
 end
 
+"""
+    struct GaussianNoise
 
+Gaussian noise layer. Multiplies Gaussian-distributed random values with 
+*mean = 1.0* and *sigma = σ* to each training value.
+
+### Constructors:
++ `aussianNoise(σ; train_only=true)`
+
+### Arguments:
++ `σ`: Standard deviation for the distribution of noise
++ `train_only=true`: if `true`, noise will only be applied in training.
+"""
+struct GaussianNoise
+    σ
+    train_only
+    GaussianNoise(σ; train_only=true) = new(σ, train_only)
+end
+
+function (l::GaussianNoise)(x)
+
+    if AutoGrad.recording() || !train_only
+        return do_noise(x, σ)
+    else
+        return x
+    end
+end
+
+function Base.summary(l::GaussianNoise; indent=0)
+    s1 = "GaussianNoise layer with σ = $(l.σ)"
+    return print_summary_line(indent, s1, 0)
+end
 
 
 
