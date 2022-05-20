@@ -21,8 +21,7 @@ See documentation and examples for a first intro.
 
 # Installation
 
-The package is not yet released! For the moment, 
-please install the project as 
+The package can be installed with the package manager as:
 
 ```JuliaREPL
 ] add NNHelferlein
