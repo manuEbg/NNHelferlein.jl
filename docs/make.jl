@@ -15,10 +15,10 @@ makedocs(modules = [NNHelferlein],
          )
 
 deploydocs(
-    repo   = "github.com/KnetML/NNHelferlein.jl.git",
-    target = "build",
-    branch = "gh-pages",
-    devbranch = "main",
-    # devurl = "dev",
-    versions = ["stable" => "v^", "v#.#", "dev" => "dev"]
-)
+    repo   = "github.com/KnetML/NNHelferlein.jl.git")
+#    target = "build",
+#    branch = "gh-pages",
+#    devbranch = "main",
+#    # devurl = "dev",
+#    versions = ["stable" => "v^", "v#.#", "dev" => "dev"]
+#)
