@@ -18,8 +18,6 @@ deploydocs(
     repo   = "github.com/KnetML/NNHelferlein.jl.git",
     target = "build",
     branch = "gh-pages",
-    # deps   = nothing | <Function>,
-    # make   = nothing | <Function>,
     devbranch = "main",
     # devurl = "dev",
     versions = ["stable" => "v^", "v#.#", "dev" => "dev"],
