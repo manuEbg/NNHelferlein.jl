@@ -120,11 +120,11 @@ Base.eltype(it::PartialIterator) = eltype(first(it.inner))
 Iterator to wrap any Knet.Data iterator of minibatches in 
 order to add random noise.    
 Each value will be multiplied with a random value form 
-Gaussian noise with mean=1.0 and sd=sigma.
+Gaussian noise with mean=1.0 and sd=σ.
 
 ### Construtors:
     MBNoiser(mbs::Knet.Data, σ)
-    MBNoiser(mbs::Knet.Data; σ=1.0)
+    MBNoiser(mbs::Knet.Data; σ=0.01)
 
 + `mbs`: iterator with minibatches
 + `σ`: standard deviation for the Gaussian noise
@@ -139,7 +139,7 @@ julia> mbs_noised = MBNoiser(mbs, 0.05)
 struct MBNoiser  <: DataLoader
     mbs::Union{Knet.Data, DataLoader}
     σ
-    MBNoiser(mbs::Union{Knet.Data, DataLoader}, sd=1.0; σ=sd) = new(mbs, σ)
+    MBNoiser(mbs::Union{Knet.Data, DataLoader}, sd=0.01; σ=sd) = new(mbs, σ)
 end
 
 # TODO: size on-the-fly

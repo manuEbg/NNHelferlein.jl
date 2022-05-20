@@ -81,8 +81,14 @@ AttnInFeed
 
 ```@docs
 DataLoader
+```
+
+## Iteration utilities
+```@docs
 PartialIterator
 split_minibatches
+MBNoiser
+MBMasquerade
 ```
 
 ## Tabular data
@@ -97,8 +103,6 @@ dataframe_read
 dataframe_minibatches
 dataframe_split
 mk_class_ids
-MBNoiser
-MBMasquerade
 ```
 
 ## Image data
