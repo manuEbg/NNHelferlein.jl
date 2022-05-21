@@ -8,11 +8,24 @@ trained with the Knet-iterators, all layers can be used together with
 Knet-style *quickly-self-written* layers, all Knet-networks can be trained
 with tb_train(), all data providers can be used together, ...
 
+The project is hosted here:    
+<https://github.com/KnetML/NNHelferlein.jl>
+
 
 ## Installation
 
-For installation please refer to the README @github:
-<https://github.com/KnetML/NNHelferlein.jl>
+*NNHelferlein* is a registered package and 
+ can be installed with the package manager as:
+
+```JuliaREPL
+] add NNHelferlein
+```
+or
+```JuliaREPL
+using Pkg
+Pkg.add("NNHelferlein")
+```
+
 
 ## First Steps
 
@@ -263,3 +276,8 @@ Depth = 2
 
 ```@index
 ```
+
+## Changelog
+
+The history can be found here: [ChangeLog of NNHelferlein package] (@ref)
+
