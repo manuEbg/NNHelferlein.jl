@@ -1,4 +1,3 @@
-# import Pkg; Pkg.add("Documenter")#; Pkg.add("NNHelferlein")
 using Documenter, NNHelferlein
 
 makedocs(modules = [NNHelferlein],
@@ -17,9 +16,3 @@ makedocs(modules = [NNHelferlein],
 
 deploydocs(
     repo   = "github.com/KnetML/NNHelferlein.jl.git")
-#    target = "build",
-#    branch = "gh-pages",
-#    devbranch = "main",
-#    # devurl = "dev",
-#    versions = ["stable" => "v^", "v#.#", "dev" => "dev"]
-#)
