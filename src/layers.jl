@@ -229,12 +229,8 @@ Default deconvolution layer.
 
 ### Constructors:
 + `DeConv(w, b, actf, kwargs...)`: default constructor
-+ `Conv(w1::Int, w2::Int,  i::Int, o::Int; actf=relu, kwargs...)`: layer with
++ `DeConv(w1::Int, w2::Int,  i::Int, o::Int; actf=relu, kwargs...)`: layer with
     o kernels of size (w1,w2) for an input of i channels.
-+ `Conv(h5::HDF5.File, group::String; trainable=false, actf=relu)`:
-+ `Conv(h5::HDF5.File, group::String; trainable=false, actf=relu)`: layer
-        imported from a hdf5-file from tensorflow with the
-        hdf-object hdfo and the group name group.
 
 ### Keyword arguments:
 + `padding=0`: the number of extra zeros implicitly concatenated

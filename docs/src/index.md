@@ -279,5 +279,5 @@ Depth = 2
 
 ## Changelog
 
-The history can be found here: [ChangeLog of NNHelferlein package] (@ref)
+The history can be found here: [ChangeLog of NNHelferlein package](@ref)
 
