@@ -142,10 +142,10 @@ end
 
 (c::Conv)(x) = c.actf.(Knet.conv4(c.w, x; c.kwargs...) .+ c.b)
 
-Conv(h5::HDF5.File, group::String; trainable=false, actf=Knet.relu) =
-    Conv(h5, "$group/$group/kernel:0","$group/$group/bias:0", trainable=trainable, actf=actf)
+Conv(h5::HDF5.File, group::String; trainable=false, actf=Knet.relu, kwargs...) =
+    Conv(h5, "$group/$group/kernel:0","$group/$group/bias:0"; trainable=trainable, actf=actf, kwargs...)
 
-function Conv(h5::HDF5.File, kernel::String, bias::String; trainable=false, actf=Knet.relu)
+function Conv(h5::HDF5.File, kernel::String, bias::String; trainable=false, actf=Knet.relu, kwargs...)
 
     w = read(h5, kernel)
     w = permutedims(w, [4,3,2,1])
@@ -162,10 +162,10 @@ function Conv(h5::HDF5.File, kernel::String, bias::String; trainable=false, actf
     end
 
     (w1, w2, i, o) = size(w)
-    pad = (w1-1)÷2
-    println("Generating layer from hdf with kernel ($w1,$w2), $i channels, $o kernels and $pad padding.")
+    #pad = (w1-1)÷2
+    println("Generating layer from hdf with kernel ($w1,$w2), $i channels, $o kernels.")
 
-    return Conv(w, b, actf; padding=pad)
+    return Conv(w, b, actf; kwargs...)
 end
 
 function Base.summary(l::Conv; indent=0)
