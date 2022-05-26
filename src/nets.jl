@@ -91,9 +91,12 @@ end
 
 """
     function +(n::DNN, l::Union{Layer, Chain})
+    function +(l1::Layer, l2::Union{Layer, Chain})
 
 The `plus`-operator is overloaded to be able to add layers and chains 
 to a network.
+
+The second form returns a new chain if 2 Layers are added.
 
 ### Example:
 
@@ -129,6 +132,10 @@ Total number of parameters: 51
 function Base.:+(n::NNHelferlein.DNN, l::Union{NNHelferlein.Layer, NNHelferlein.Chain})
     add_layer!(n, l)
     return n
+end
+
+function Base.:+(l1::NNHelferlein.Layer, l2::Union{NNHelferlein.Layer, NNHelferlein.Chain})
+    return NNHelferlein.Chain(l1, l2)
 end
 
 

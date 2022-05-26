@@ -1,5 +1,6 @@
 # ChangeLog of NNHelferlein package
 
++ added: Layer + Layer = Chain
 + docu fixed for DeConv
 + changelog added to docu
 

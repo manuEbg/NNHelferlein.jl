@@ -185,3 +185,8 @@ function test_add()
 
     return n == 3
 end
+
+function test_add_layers()
+    mdl = Dense(2,2) + Dense(2,5)
+    return mdl isa Chain
+end

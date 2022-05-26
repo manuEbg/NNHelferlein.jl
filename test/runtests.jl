@@ -147,6 +147,7 @@ using Statistics: mean
 
 @test test_vae()
 @test test_add()
+@test test_add_layers()
 
 
 

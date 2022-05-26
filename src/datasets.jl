@@ -200,3 +200,8 @@ function dataset_iris()
 
     return dataframe_read(joinpath(NNHelferlein.DATA_DIR, IRIS_DIR, IRIS_CSV))
 end
+
+
+
+
+# TODO datasets fashion mnist und weitere einfache
