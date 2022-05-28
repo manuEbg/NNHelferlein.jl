@@ -48,7 +48,7 @@ end
 
 function test_conv_hdf5()
     h5file = h5open(joinpath("data", "dummykeras.h5"))
-    l = Conv(h5file, "conv2d", trainable=true) # 3x3x16, inp: 28x28x1
+    l = Conv(h5file, "conv2d", trainable=true, padding=1) # 3x3x16, inp: 28x28x1
     x = convert2KnetArray(rand(Float32, 28,28,1,8))
     y = l(x)
     return size(y) == (28,28,16,8)
