@@ -1,5 +1,6 @@
 # ChangeLog of NNHelferlein package
 
++ pre-trained vgg example fixed for changed "import-HDF"-interface
 + added: Layer + Layer = Chain
 + docu fixed for DeConv
 + changelog added to docu
