@@ -1,6 +1,8 @@
 # ChangeLog of NNHelferlein package
 
++ layer GlobalAveragePoling added
 + pre-trained vgg example fixed for changed "import-HDF"-interface
++ hdf5 import with all kwargs possible
 + added: Layer + Layer = Chain
 + docu fixed for DeConv
 + changelog added to docu

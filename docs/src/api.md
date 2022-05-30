@@ -62,6 +62,7 @@ Dropout
 BatchNorm
 LayerNorm
 GaussianNoise
+GlobalAveragePooling
 ```
 
 

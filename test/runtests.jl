@@ -83,6 +83,7 @@ using Statistics: mean
 @test test_layer_dropout()
 @test test_layer_bn()
 @test test_layer_ln()
+@test test_layer_gap()
 
 @test test_layer_seq_tagger()
 @test test_layer_seq_classi()

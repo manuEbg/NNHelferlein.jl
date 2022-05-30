@@ -592,7 +592,7 @@ Gaussian noise layer. Multiplies Gaussian-distributed random values with
 + `σ`: Standard deviation for the distribution of noise
 + `train_only=true`: if `true`, noise will only be applied in training.
 """
-struct GaussianNoise
+struct GaussianNoise <: Layer
     σ
     train_only
     GaussianNoise(σ; train_only=true) = new(σ, train_only)
@@ -613,6 +613,37 @@ function Base.summary(l::GaussianNoise; indent=0)
 end
 
 
+
+
+"""
+    struct GlobalAveragePooling  <: Layer
+
+Layer to return a matrix with the mean values of the first two
+dimensions for each sample of the minibatch.
+If the input is a stack of feature maps from a convolutional layer,
+the result can be seen as the mean value of each feature map.
+Number of *output*-rows equals number of *input*-featuremaps; 
+number of *output*-columns equals size of minibatch. 
+
+### Constructors:
+    GlobalAveragePooling()
+
+"""
+struct GlobalAveragePooling  <: Layer
+end
+
+(l::GlobalAveragePooling)(x) = mean(x, dims=(1,2)) |> x-> reshape(x, size(x,3),:)
+
+function Base.summary(l::GlobalAveragePooling; indent=0)
+    s1 = "Global average pooling layer"
+    return print_summary_line(indent, s1, 0)
+end
+
+
+# Recurrent layers:
+#
+#
+#
 
 """
     struct Recurrent <: Layer

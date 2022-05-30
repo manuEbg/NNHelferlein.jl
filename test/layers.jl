@@ -344,3 +344,18 @@ function test_print()
 
     return n == 5
 end
+
+
+function test_layer_gap()
+
+    x1 = ones(3,3)
+    xc = cat(x1, x1.+1, x1.+2, x1.+3, dims=3)
+    x = cat(xc, xc.+5, xc.+6, dims=4)
+    l = GlobalAveragePooling()
+
+    o = l(x)
+
+    return size(o) == (4,3)
+end
+
+test_gap()
