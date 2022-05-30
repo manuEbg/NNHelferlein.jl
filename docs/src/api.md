@@ -57,6 +57,10 @@ reset_cell_states!
 ```@docs
 Flat
 PyFlat
+Activation
+Relu
+Sigm
+Logistic
 Softmax
 Activation
 Dropout
