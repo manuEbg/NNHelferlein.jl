@@ -58,11 +58,7 @@ reset_cell_states!
 Flat
 PyFlat
 Activation
-Relu
-Sigm
-Logistic
 Softmax
-Activation
 Dropout
 BatchNorm
 LayerNorm
