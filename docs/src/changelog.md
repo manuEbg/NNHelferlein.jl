@@ -1,5 +1,6 @@
 # ChangeLog of NNHelferlein package
 
++ Activation Layers added
 + layer GlobalAveragePoling added
 + pre-trained vgg example fixed for changed "import-HDF"-interface
 + hdf5 import with all kwargs possible

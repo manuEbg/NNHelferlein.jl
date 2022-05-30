@@ -358,4 +358,24 @@ function test_layer_gap()
     return size(o) == (4,3)
 end
 
-test_gap()
+
+function test_layer_actf()
+
+    x = range(-1,1, length=27) |> x->reshape(x, 3,3,3)
+    l = Sigm()
+    sigm_m = mean(l(x))
+
+    l = Logistic()
+    log_m = mean(l(x))
+
+    l = Relu()
+    relu_m = mean(l(x))
+
+    l = Activation(relu)
+    actf_m = mean(l(x))
+
+    return isapprox(sigm_m, 0.5, atol=0.01) &&
+           isapprox(log_m, 0.5, atol=0.01) &&
+           isapprox(relu_m, 0.259, atol=0.01) &&
+           isapprox(actf_m, 0.259, atol=0.01) 
+end

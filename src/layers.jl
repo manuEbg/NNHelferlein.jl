@@ -411,6 +411,32 @@ function Base.summary(l::Softmax; indent=0)
     return print_summary_line(indent, s1, n)
 end
 
+"""
+    struct Activation <: Layer
+
+Simple activation layer with the desired activation function as argument.
+
+### Constructors:
++ `Activation(actf)`
++ `Relu()`: return an Activation layer with ReLU activation
++ `Sigm()`
++ `Logistic()`: return an Activation layer with logistic (sigmoid) activation
+"""
+struct Activation <: Layer
+    actf
+end
+(l::Activation)(x) = l.actf.(x)
+
+Relu() = Activation(relu)
+Logistic() = Activation(sigm)
+Sigm() = Activation(sigm)
+
+
+function Base.summary(l::Activation; indent=0)
+    s1 = "Activation layer, actf=$(l.actf)"
+    return print_summary_line(indent, s1, 0)
+end
+
 
 
 """

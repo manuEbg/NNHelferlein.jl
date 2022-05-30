@@ -58,6 +58,7 @@ reset_cell_states!
 Flat
 PyFlat
 Softmax
+Activation
 Dropout
 BatchNorm
 LayerNorm

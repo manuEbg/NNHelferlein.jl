@@ -80,6 +80,7 @@ using Statistics: mean
 @test test_layer_pyflat()
 @test test_layer_embed()
 @test test_layer_softmax()
+@test test_layer_actf()
 @test test_layer_dropout()
 @test test_layer_bn()
 @test test_layer_ln()
