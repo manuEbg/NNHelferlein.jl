@@ -8,6 +8,7 @@
                       checkpoints=nothing, cp_dir="checkpoints",
                       tb_dir="logs", tb_name="run",
                       tb_text=\"\"\"Description of tb_train!() run.\"\"\",
+                      resume=true,
                       opti_args...)
 
 Train function with TensorBoard integration. TB logs are written with
@@ -25,6 +26,11 @@ The model is updated (in-place) and the trained model is returned.
 ### Keyword arguments:
 #### Optimiser:
 + `epochs=1`: number of epochs to train
++ `resume=true`: if `true`, optimiser parameters (momentum or gradient
+        moving average) from a previous run are used to enable a 
+        seemless continuation of the training.
+        Be aware that in a `resume`ed training, the original optimizer 
+        will be used, even if a different one is specified for the continuation. 
 + `lr_decay=nothing`: do a leraning rate decay if not `nothing`:
         the value given is the final learning rate after `lrd_steps`
         steps of decay (`lr_decay` may be bigger than `lr`; in this case
@@ -93,6 +99,7 @@ function tb_train!(mdl, opti, trn, vld=nothing; epochs=1,
                   checkpoints=nothing, cp_dir="checkpoints",
                   tb_dir="logs", tb_name="run",
                   tb_text="""Description of tb_train!() run.""",
+                  resume=true,
                   opti_args...)
 
 
@@ -195,15 +202,21 @@ function tb_train!(mdl, opti, trn, vld=nothing; epochs=1,
     end
 
 
-    # set optimiser - only if not yet set:
+    # set optimiser - only if not resume:
     #
-    if isnothing(first(params(mdl)).opt)
+    if !resume
         for p in params(mdl)
             p.opt = opti(;opti_args...)
         end
     else
-        if haskey(opti_args, :lr)
-            set_learning_rate(mdl, opti_args[:lr])
+        for p in params(mdl)
+            if isnothing(p.opt)
+                p.opt = opti(;opti_args...)
+            else
+                if haskey(opti_args, :lr)
+                     set_learning_rate(mdl, opti_args[:lr])
+                end
+            end
         end
     end
 
