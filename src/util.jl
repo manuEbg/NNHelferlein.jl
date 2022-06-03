@@ -134,7 +134,11 @@ function convert2CuArray(x, innerType=Float32)
         return Array{innerType}(x)
     end
 end
+
+@doc (@doc convert2CuArray)
 convert2KnetArray(x, innerType=Float32) = convert2CuArray(x, innerType)
+
+@doc (@doc convert2CuArray)
 ifgpu(x, innerType=Float32) = convert2CuArray(x, innerType)
 
 

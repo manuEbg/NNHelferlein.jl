@@ -209,6 +209,8 @@ de_embed
 ```@docs
 init0
 convert2CuArray
+convert2KnetArray
+ifgpu
 emptyCuArray
 ```
 
