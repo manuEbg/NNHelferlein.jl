@@ -115,6 +115,8 @@ Default Conv layer.
 + `Conv(w, b, padding, actf)`: default constructor
 + `Conv(w1::Int, w2::Int,  i::Int, o::Int; actf=relu; kwargs...)`: layer with
     o kernels of size (w1,w2) for an input of i layers.
++ `Conv(w1::Int, w2::Int, w3::Int, i::Int, o::Int; actf=relu; kwargs...)`: layer 
+        with 3-dimensional kernels for 3D convolution (requires 5-dimensional input)
 + `Conv(h5::HDF5.File, group::String; trainable=false, actf=relu)`:
 + `Conv(h5::HDF5.File, group::String; trainable=false, actf=relu)`: layer
         imported from a hdf5-file from TensorFlow with the
@@ -137,6 +139,9 @@ struct Conv  <: Layer
     Conv(w, b, actf; kwargs...) = new(w, b, actf, kwargs)
     Conv(w1::Int, w2::Int,  i::Int, o::Int; actf=Knet.relu, kwargs...) =
             new(Knet.param(w1,w2,i,o; init=xavier_normal), Knet.param0(1,1,o,1),
+                actf, kwargs)
+    Conv(w1::Int, w2::Int, w3::Int, i::Int, o::Int; actf=Knet.relu, kwargs...) =
+            new(Knet.param(w1,w2,w3,i,o; init=xavier_normal), Knet.param0(1,1,1,o,1),
                 actf, kwargs)
 end
 
@@ -161,9 +166,11 @@ function Conv(h5::HDF5.File, kernel::String, bias::String; trainable=false, actf
         b = Param(b)
     end
 
-    (w1, w2, i, o) = size(w)
+    siz = size(w)  
+    i,o = siz[end-1:end]
+    w_siz = siz[1:end-2]
     #pad = (w1-1)÷2
-    println("Generating layer from hdf with kernel ($w1,$w2), $i channels, $o kernels.")
+    println("Generating layer from hdf with kernel $w_siz, $i channels, $o kernels.")
 
     return Conv(w, b, actf; kwargs...)
 end
