@@ -1,5 +1,10 @@
 # ChangeLog of NNHelferlein package
 
++ explicit signature added for 3d-convolution
++ train: possibility to disable tensorboard logs
++ train: possibility to return losses and accs for 
+  plotting after training
+
 ### v1.1.1
 + some docstring cosmetics
 + Activation Layers added

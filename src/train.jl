@@ -79,11 +79,14 @@ The model is updated (in-place) and the trained model is returned.
         name `model` use cp_epoch=1; to write every second epochs cp_epoch=2, 
         etc.
 + `cp_dir="checkpoints"`: directory for checkpoints
++ `return_stats=false`: if `true`, a dictionary with losses and accuracies  of
+        training and validation data is returned. 
 
 #### TensorBoard:
 TensorBoard log-directory is created from 3 parts:
 `tb_dir/tb_name/<current date time>`.
 
++ `tensorboard=true`: if `true`, TensorBoard logs are written
 + `tb_dir="logs"`: root directory for TensorBoard logs.
 + `tb_name="run"`: name of training run. `tb_name` will be used as
         directory name and should not include whitespace
@@ -99,7 +102,7 @@ function tb_train!(mdl, opti, trn, vld=nothing; epochs=1,
                   checkpoints=nothing, cp_dir="checkpoints",
                   tb_dir="logs", tb_name="run",
                   tb_text="""Description of tb_train!() run.""",
-                  resume=true,
+                  resume=true, tensorboard=true, return_stats=false,
                   opti_args...)
 
 
@@ -180,26 +183,50 @@ function tb_train!(mdl, opti, trn, vld=nothing; epochs=1,
             println(".")
         end
         println("Evaluation is performed every $eval_nth minibatches with $n_eval mbs.")
-        println("Watch the progress with TensorBoard at:")
-        println(tb_log_dir)
+        if tensorboard 
+            println("Watch the progress with TensorBoard at:")
+            println(tb_log_dir)
+        else
+            println("TensorBoard logs are disabled!")
+        end
         flush(stdout)
     end
     echo_log()
 
 
-    # Tensorboard logger:
+    # Tensorboard logger and loss/acc:
     #
-    tbl = TensorBoardLogger.TBLogger(tb_log_dir,
-                    min_level=Logging.Info)
-    log_text(tbl, tb_log_dir, tb_name, start_time, tb_text,
-             opti, trn, vld, epochs,
-             lr_decay, lrd_steps, l2, l1,
-             checkpoints, opti_args)
-    calc_and_report_loss(mdl, eval_trn, eval_vld, tbl, 0)
+    loss_trn = calc_loss(mdl, data=eval_trn)
+    loss_vld = calc_loss(mdl, data=eval_vld)
+    acc_trn = calc_acc(mdl, acc_fun, data=eval_trn)
+    acc_vld = calc_acc(mdl, acc_fun, data=eval_vld)
 
-    if !isnothing(acc_fun)
-        calc_and_report_acc(mdl, acc_fun, eval_trn, eval_vld, tbl, 0)
+    log_text = mk_log_text(tb_log_dir, tb_name, start_time, tb_text,
+                    opti, trn, vld, epochs,
+                    lr_decay, lrd_steps, l2, l1,
+                    checkpoints, opti_args)
+    if tensorboard
+        tbl = TensorBoardLogger.TBLogger(tb_log_dir,
+                    min_level=Logging.Info)
+        write_tb_log_text(tbl, log_text)
+        write_tb_log_loss(tbl, loss_trn, loss_vld, 0)
+        write_tb_log_acc(tbl, acc_trn, acc_vld, 0)
     end
+
+    stats = Dict(:eval_step => [0],
+                 :eval_epoch => [0.0],
+                 :loss_trn => [loss_trn],
+                 :loss_vld => [loss_vld],
+                 :acc_trn => [acc_trn],
+                 :acc_vld => [acc_vld],
+                 :mb_step => Int[],
+                 :mb_epoch => Float64[],
+                 :mb_loss => Float64[],
+                 :name => tb_name,
+                 :text => tb_text,
+                 :time => Dates.format(start_time, "yyyy-mm-ddTHH-MM-SS"),
+                 :description => log_text
+                 )
 
 
     # set optimiser - only if not resume:
@@ -214,7 +241,7 @@ function tb_train!(mdl, opti, trn, vld=nothing; epochs=1,
                 p.opt = opti(;opti_args...)
             else
                 if haskey(opti_args, :lr)
-                     set_learning_rate(mdl, opti_args[:lr])
+                      p.opt.lr = opti_args[:lr]
                 end
             end
         end
@@ -253,20 +280,39 @@ function tb_train!(mdl, opti, trn, vld=nothing; epochs=1,
         # println("mb_loss: $mb_loss"); flush(stdout)
         push!(mb_losses, mb_loss)
         if (i % eval_nth) == 0
-            calc_and_report_loss(mdl, eval_trn, eval_vld, tbl, eval_nth)
+           # calc_and_report_loss(mdl, eval_trn, eval_vld, tbl, eval_nth)
+            loss_trn = calc_loss(mdl, data=eval_trn)
+            loss_vld = calc_loss(mdl, data=eval_vld)
+            acc_trn = calc_acc(mdl, acc_fun, data=eval_trn)
+            acc_vld = calc_acc(mdl, acc_fun, data=eval_vld)
+           
+            push!(stats[:eval_step], i)
+            push!(stats[:eval_epoch], i/n_trn)
+            push!(stats[:loss_trn], loss_trn)
+            push!(stats[:loss_vld], loss_vld)
+            push!(stats[:acc_trn], acc_trn)
+            push!(stats[:acc_vld], acc_vld)
 
-            if !isnothing(acc_fun)
-                calc_and_report_acc(mdl, acc_fun, eval_trn, eval_vld,
-                                    tbl, 0)
+            if tensorboard
+                write_tb_log_loss(tbl, loss_trn, loss_vld, eval_nth)
+                write_tb_log_acc(tbl, acc_trn, acc_vld, 0)
             end
         end
 
         if (i % mb_loss_nth) == 0
-            TensorBoardLogger.log_value(tbl,
-                    "Minibatch loss (epoch = $n_trn steps)",
-                    mean(mb_losses), step=i)
-            # println("mb_loss-mean: $(mean(mb_losses))"); flush(stdout)
+            mb_loss = mean(mb_losses)
             mb_losses = Float32[]
+
+            push!(stats[:mb_step], i)
+            push!(stats[:mb_epoch], i/n_trn)
+            push!(stats[:mb_loss], mb_loss)
+
+            if tensorboard
+                TensorBoardLogger.log_value(tbl,
+                        "Minibatch loss (epoch = $n_trn steps)",
+                        mb_loss, step=i)
+            end
+            # println("mb_loss-mean: $(mean(mb_losses))"); flush(stdout)
         end
 
         # checkpoints:
@@ -303,7 +349,22 @@ function tb_train!(mdl, opti, trn, vld=nothing; epochs=1,
     if (!isnothing(checkpoints))
         write_cp(mdl, n_trn*epochs+1, tb_log_dir)
     end
-    return mdl
+
+    if return_stats
+        # remove empty entries in stats:
+        #
+        if isnothing(vld)
+            pop!(stats, :loss_vld, nothing)
+            pop!(stats, :acc_vld, nothing)
+        end
+        if isnothing(acc_fun)
+            pop!(stats, :acc_trn, nothing)
+            pop!(stats, :acc_vld, nothing)
+        end
+        return stats
+    else
+        return mdl
+    end
 end
 
 
@@ -315,7 +376,7 @@ function set_learning_rate(mdl, lr)
 end
 
 
-function log_text(tbl, tb_log_dir, tb_name, start_time, tb_text,
+function mk_log_text(tb_log_dir, tb_name, start_time, tb_text,
                   opti, trn, vld, epochs,
                   lr_decay, lrd_steps, l2, l1,
                   checkpoints, opti_args)
@@ -359,10 +420,7 @@ function log_text(tbl, tb_log_dir, tb_name, start_time, tb_text,
     end
     tb_log_text *= "   </ul>"
 
-    TensorBoardLogger.log_text(tbl, "Description", tb_log_text, step=0)
-    # with_logger(tbl) do
-    #         @info "Description" text=tb_log_text log_step_increment=0
-    # end
+    return tb_log_text
 end
 
 function write_cp(model, step, dir)
@@ -374,61 +432,59 @@ function write_cp(model, step, dir)
     JLD2.@save fname model
 end
 
-# Helper to calc loss and acc with only ONE forward run:
-#
 function calc_loss(mdl; data)
 
-    loss = 0.0
-    for (x,y) in data
-        loss += mdl(x,y)
+    if isnothing(data)
+        return nothing
+    else
+        return mean([mdl(x,y) for (x,y) in data])
     end
-    return loss/length(data)
 end
 
 function calc_acc(mdl, fun; data)
 
-    # acc = 0.0
-    # for (x,y) in data
-    #     acc += fun(mdl(x), y)
-    # end
-    # return acc/length(data)
-    return fun(mdl, data=data)
+    if isnothing(fun)
+        return nothing
+    elseif isnothing(data)
+        return nothing
+    else
+        return fun(mdl, data=data)
+    end
 end
 
 
 # Helper for TensorBoardLogger:
 #
-function calc_and_report_loss(mdl, trn, vld, tbl, step)
-
-    loss_trn = calc_loss(mdl, data=trn)
+function write_tb_log_loss(tbl, trn, vld, step)
 
     if !isnothing(vld)
-        loss_vld = calc_loss(mdl, data=vld)
         with_logger(tbl) do
-            @info "Evaluation Loss" train=loss_trn valid=loss_vld log_step_increment=step
+            @info "Evaluation Loss" train=trn valid=vld log_step_increment=step
         end
     else
         with_logger(tbl) do
-            @info "Evaluation Loss" train=loss_trn log_step_increment=step
+            @info "Evaluation Loss" train=trn log_step_increment=step
         end
     end
 end
 
-function calc_and_report_acc(mdl, acc_fun, trn, vld, tbl, step)
-
-    acc_trn = calc_acc(mdl, acc_fun, data=trn)
+function write_tb_log_acc(tbl, trn, vld, step)
 
     if !isnothing(vld)
-        acc_vld = calc_acc(mdl, acc_fun, data=vld)
         with_logger(tbl) do
-            @info "Evaluation Accuracy" train=acc_trn valid=acc_vld log_step_increment=step
+            @info "Evaluation Accuracy" train=trn valid=vld log_step_increment=step
         end
     else
         with_logger(tbl) do
-            @info "Evaluation Accuracy" train=acc_trn log_step_increment=step
+            @info "Evaluation Accuracy" train=trn log_step_increment=step
         end
     end
 end
+
+function write_tb_log_text(tbl, text)
+    TensorBoardLogger.log_text(tbl, "Description", text, step=0)
+end
+
 
 # calc step size for lr-decay based on
 # start rate, end rate and num steps:

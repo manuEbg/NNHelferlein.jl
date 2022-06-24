@@ -160,6 +160,30 @@ function test_decay_cp()
 end
 
 
+function test_stats()
+
+        trn = DataFrame(x1=randn(16), x2=randn(16),
+                        x3=randn(16), x4=randn(16),
+                        x5=randn(16), x6=randn(16),
+                        x7=randn(16), x8=randn(16),
+                        y=collect(range(0, 1, length=16)))
+
+        mb = dataframe_minibatches(trn, size=4)
+
+        mlp = Regressor(Dense(8,8, actf=relu),
+                         Dense(8,8),
+                         GaussianNoise(0.025),
+                         Dense(8,1, actf=identity))
+        n = print_network(mlp)
+
+        stats = tb_train!(mlp, Adam, mb, epochs=10, acc_fun=acc_fun,
+                lr=0.001, lr_decay=0.0001, lrd_steps=5,
+                tensorboard=false, return_stats=true)
+
+        return stats isa Dict &&
+                haskey(stats, :mb_loss)
+end
+
 # test apis:
 #
 function test_symbolic_api()
