@@ -8,7 +8,7 @@
                       checkpoints=nothing, cp_dir="checkpoints",
                       tb_dir="logs", tb_name="run",
                       tb_text=\"\"\"Description of tb_train!() run.\"\"\",
-                      resume=true,
+                      resume=true, tensorboard=true, return_stats=false,
                       opti_args...)
 
 Train function with TensorBoard integration. TB logs are written with
