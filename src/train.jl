@@ -80,7 +80,8 @@ The model is updated (in-place) and the trained model is returned.
         etc.
 + `cp_dir="checkpoints"`: directory for checkpoints
 + `return_stats=false`: if `true`, a dictionary with losses and accuracies  of
-        training and validation data is returned. 
+        training and validation data is returned instead of the 
+        model. 
 
 #### TensorBoard:
 TensorBoard log-directory is created from 3 parts:
