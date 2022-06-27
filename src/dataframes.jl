@@ -135,7 +135,9 @@ function dataframe_minibatch(data; size=16, ignore=[], teaching="y",
         end
 
         if verbose > 0
-            if t_type <: Real 
+            if t_type <: Integer
+                println("... number of classes:       $(length(unique(data[!,teaching])))")
+            elseif t_type <: Real 
                 println("... y is scalar in range     $(minimum(data[!,teaching])) - $(maximum(data[!,teaching]))")
             else    
                 println("... number of classes:       $(length(unique(data[!,teaching])))")
