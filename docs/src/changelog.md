@@ -1,5 +1,6 @@
 # ChangeLog of NNHelferlein package
 
++ FeatureSelection layer added
 + explicit signature added for 3d-convolution
 + train: possibility to disable tensorboard logs
 + train: possibility to return losses and accs for 

@@ -52,6 +52,7 @@ export DNN, Classifier, Regressor, Chain, VAE,          # chains
        get_class_labels,
        iterate, length,
        Layer, Dense, Conv, Pool, Flat, PyFlat,         # layers
+       FeatureSelection,
        DeConv, UnPool,
        Embed, Recurrent,
        Softmax, Dropout, BatchNorm, LayerNorm,

@@ -70,6 +70,7 @@ using Statistics: mean
 @test test_layer_pred()
 @test test_dense_hdf5()
 @test test_layer_linear()
+@test test_layer_fs()
 
 @test test_layer_conv()
 @test test_conv_hdf5()

@@ -214,7 +214,8 @@ Split data, organised row-wise in a DataFrame into train and validation sets.
 ### Arguments:
 + `df`: data
 + `teaching="y"`: name or index of column with teaching input "y"
-+ `split=0.8`: fraction of data to be used for the first returned dataframe
++ `split=0.8`: fraction of data to be used for the first returned 
+              subdataframe
 + `shuffle=true`: shuffle the rows of the dataframe.
 + `balanced=true`: if `true`, result datasets will be balanced by oversampling.
               Returned datasets will be bigger as expected

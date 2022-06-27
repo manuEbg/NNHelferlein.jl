@@ -57,6 +57,7 @@ reset_cell_states!
 ```@docs
 Flat
 PyFlat
+FeatureSelection
 Activation
 Softmax
 Dropout
@@ -103,7 +104,7 @@ iterators of minibatches.
 
 ```@docs
 dataframe_read
-dataframe_minibatches
+dataframe_minibatch
 dataframe_split
 mk_class_ids
 ```

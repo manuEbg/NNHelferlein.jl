@@ -104,7 +104,38 @@ function Base.summary(l::Linear; indent=0)
 end
 
 
+"""
+    struct FeatureSelection  <: Layer
 
+Simple feature selection layer that maps an input to output with
+one-by-one connections; i.e. a layer of size 128 has 128 weights
+(plus optional biases).
+
+Biases ans actvation functions are disabled by default.
+
+### Constructors:
++ `FeatureSelection(i; bias=false, actf=identity)`: with the same
+            input- and output-size `i`, whre `i` is an integer
+            or a Tuple of the input dimensions.
+
+"""
+struct FeatureSelection  <: Layer
+    w
+    b
+    actf
+    FeatureSelection(i; bias=false, actf=identity) = 
+                new(param(i...), bias ? Knet.param0(i...) : init0(i...), actf)
+end
+
+(l::FeatureSelection)(x) = l.actf.(l.w .* x .+ l.b)
+
+
+function Base.summary(l::FeatureSelection; indent=0)
+    n = get_n_params(l)
+    i = size(l.w)
+    s1 = "Feature selection layer $i → $i, with $(l.actf),"
+    return print_summary_line(indent, s1, n)
+end
 
 """
     struct Conv  <: Layer

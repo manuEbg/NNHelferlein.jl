@@ -379,3 +379,13 @@ function test_layer_actf()
            isapprox(relu_m, 0.259, atol=0.01) &&
            isapprox(actf_m, 0.259, atol=0.01) 
 end
+
+
+function test_layer_fs()
+    siz = (256,16)
+    x = randn(siz)
+    fs = FeatureSelection(siz)
+    y = fs(x)
+
+    return size(y) = (256,16)
+end
