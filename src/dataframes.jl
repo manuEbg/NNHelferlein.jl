@@ -42,11 +42,14 @@ end
 
 
 """
-    dataframe_minibatches(data::DataFrames.DataFrame; size=256, ignore=[], teaching="y", 
+    dataframe_minibatch(data::DataFrames.DataFrame; size=256, ignore=[], teaching="y", 
                           verbose=1, o...)
+    dataframe_minibatches()
 
 Make Knet-conform minibatches of type `Knet.data` from a dataframe
 with one sample per row.
+
+`dataframe_minibatches()` is an alieas kept for backward compatibility.
 
 ### Arguments:
 + `ignore`: defines a list of column names to be ignored
@@ -67,7 +70,7 @@ with one sample per row.
 Allowed column definitions for `ignore` and `teaching` include names (as Strings),
 column names (as Symbols) or column indices (as Integer values).
 """
-function dataframe_minibatches(data; size=16, ignore=[], teaching="y", 
+function dataframe_minibatch(data; size=16, ignore=[], teaching="y", 
                                verbose=1, o...)
 
     if !(ignore isa(AbstractArray))
@@ -93,7 +96,13 @@ function dataframe_minibatches(data; size=16, ignore=[], teaching="y",
         println("... number of records used:  $(Base.size(data,1))")
         println("... teaching input y is:     $teaching")
         println("... number of columns used:  $(length(cols))")
-        println("... data columns:            $cols")
+
+        print("... data columns:            ")
+        if length(cols) <= 8
+            println("$cols")
+        else
+            println("[$(cols[1]), $(cols[2]) ... $(cols[end-1]), $(cols[end])]")
+        end
     end
 
 
@@ -136,6 +145,8 @@ function dataframe_minibatches(data; size=16, ignore=[], teaching="y",
         return Knet.minibatch(x, y, size; o...)
     end
 end
+
+dataframe_minibatches = dataframe_minibatch
 
 
 
@@ -196,26 +207,26 @@ end
 
 """
     function dataframe_split(df::DataFrames.DataFrame;
-                             teaching="y", fr=0.2, balanced=true)
+                             teaching="y", split=0.8, balanced=true)
 
 Split data, organised row-wise in a DataFrame into train and validation sets.
 
 ### Arguments:
 + `df`: data
 + `teaching="y"`: name or index of column with teaching input "y"
-+ `fr=0.2`: fraction of data to be used for validation
++ `split=0.8`: fraction of data to be used for the first returned dataframe
 + `shuffle=true`: shuffle the rows of the dataframe.
 + `balanced=true`: if `true`, result datasets will be balanced by oversampling.
               Returned datasets will be bigger as expected
               but include the same numbers of samples for each class.
 """
 function dataframe_split(df::DataFrames.DataFrame; teaching="y",
-                         fr=0.2, shuffle=true, balanced=false)
+                         split=0.8, shuffle=true, balanced=true)
 
     if shuffle
         df .= df[Random.randperm(DataFrames.nrow(df)),:]
     end
-    ((trn,ytrn), (vld,yvld)) = do_split(df, df[:,teaching], at=fr)
+    ((trn,ytrn), (vld,yvld)) = do_split(df, df[:,teaching], at=split)
 
     if balanced
         (trn,ytrn) = do_balance(trn, ytrn)

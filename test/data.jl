@@ -38,7 +38,7 @@ end
 
 function test_df_split()
     df = dataframe_read(joinpath("data", "iris150.csv"))
-    t,v = dataframe_split(df, fr=0.5, shuffle=true,
+    t,v = dataframe_split(df, split=0.5, shuffle=true,
           teaching="species", balanced=true)
     return nrow(v) == 75
 end

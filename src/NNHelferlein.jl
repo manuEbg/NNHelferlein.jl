@@ -70,7 +70,7 @@ export DNN, Classifier, Regressor, Chain, VAE,          # chains
        dot_prod_attn, MultiHeadAttn,
        separate_heads, merge_heads,
        dataframe_read, dataframe_split,         # import data
-       dataframe_minibatches, mk_class_ids,
+       dataframe_minibatches, dataframe_minibatch, mk_class_ids,
        MBNoiser, MBMasquerade,
        mk_image_minibatch,
        tb_train!,
