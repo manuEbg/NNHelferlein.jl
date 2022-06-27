@@ -383,9 +383,9 @@ end
 
 function test_layer_fs()
     siz = (256,16)
-    x = randn(siz)
+    x = randn(siz) |> ifgpu
     fs = FeatureSelection(siz)
     y = fs(x)
 
-    return size(y) = (256,16)
+    return size(y) == (256,16)
 end
