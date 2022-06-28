@@ -208,13 +208,17 @@ end
 
 function Base.summary(l::Conv; indent=0)
     n = get_n_params(l)
-    k1,k2,i,o = size(l.w)
+
+    siz = size(l.w)  
+    i,o = siz[end-1:end]
+    w_siz = siz[1:end-2]
+    
     if length(l.kwargs) > 0
         kwa = " $(collect(l.kwargs))"
     else
         kwa = ""
     end
-    s1 = "Conv layer $i → $o ($k1,$k2)$kwa with $(l.actf),"
+    s1 = "Conv layer $i → $o ($w_siz) $kwa with $(l.actf),"
     return print_summary_line(indent, s1, n)
 end
 
@@ -269,6 +273,8 @@ Default deconvolution layer.
 + `DeConv(w, b, actf, kwargs...)`: default constructor
 + `DeConv(w1::Int, w2::Int,  i::Int, o::Int; actf=relu, kwargs...)`: layer with
     o kernels of size (w1,w2) for an input of i channels.
++ `DeConv(w1::Int, w2::Int, w3::Int, i::Int, o::Int; actf=relu, kwargs...)`: layer with
+    o kernels of size (w1,w2,w3) for an input of i channels.
 
 ### Keyword arguments:
 + `padding=0`: the number of extra zeros implicitly concatenated
@@ -289,22 +295,44 @@ struct DeConv  <: Layer
     DeConv(w1::Int, w2::Int,  i::Int, o::Int; actf=Knet.relu, kwargs...) =
             new(Knet.param(w1,w2,o,i; init=xavier_normal), Knet.param0(1,1,o,1),
             actf, kwargs)
+    DeConv(w1::Int, w2::Int, w3::Int, i::Int, o::Int; actf=Knet.relu, kwargs...) =
+            new(Knet.param(w1,w2,w3,o,i; init=xavier_normal), Knet.param0(1,1,1,o,1),
+            actf, kwargs)
 end
 
 (c::DeConv)(x) = c.actf.(Knet.deconv4(c.w, x; c.kwargs...) .+ c.b)
 
 function Base.summary(l::DeConv; indent=0)
     n = get_n_params(l)
-    k1,k2,i,o = size(l.w)
+    
+    siz = size(w)  
+    i,o = siz[end-1:end]
+    w_siz = siz[1:end-2]
+    
     if length(l.kwargs) > 0
         kwa = " $(collect(l.kwargs))"
     else
         kwa = ""
     end
-    s1 = "DeConv layer $o → $i ($k1,$k2)$kwa with $(l.actf),"
+    s1 = "DeConv layer $o → $i ($w_siz) $kwa with $(l.actf),"
     return print_summary_line(indent, s1, n)
 end
 
+
+    siz = size(w)  
+    i,o = siz[end-1:end]
+    w_siz = siz[1:end-2]
+    
+    k1,k2,i,o = size(l.w)
+    
+    if length(l.kwargs) > 0
+        kwa = " $(collect(l.kwargs))"
+    else
+        kwa = ""
+    end
+    s1 = "Conv layer $i → $o ($w_siz) $kwa with $(l.actf),"
+    return print_summary_line(indent, s1, n)
+end
 
 
 
