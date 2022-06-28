@@ -305,7 +305,7 @@ end
 function Base.summary(l::DeConv; indent=0)
     n = get_n_params(l)
     
-    siz = size(w)  
+    siz = size(l.w)  
     i,o = siz[end-1:end]
     w_siz = siz[1:end-2]
     
@@ -315,22 +315,6 @@ function Base.summary(l::DeConv; indent=0)
         kwa = ""
     end
     s1 = "DeConv layer $o → $i ($w_siz) $kwa with $(l.actf),"
-    return print_summary_line(indent, s1, n)
-end
-
-
-    siz = size(w)  
-    i,o = siz[end-1:end]
-    w_siz = siz[1:end-2]
-    
-    k1,k2,i,o = size(l.w)
-    
-    if length(l.kwargs) > 0
-        kwa = " $(collect(l.kwargs))"
-    else
-        kwa = ""
-    end
-    s1 = "Conv layer $i → $o ($w_siz) $kwa with $(l.actf),"
     return print_summary_line(indent, s1, n)
 end
 
