@@ -231,11 +231,11 @@ end
 Pooling layer.
 
 ### Constructors:
-+ `Pool(;kwargs...)`: max pooling; without `kwargs`, 2x2-pooling
++ `Pool(;kwargs...)`: max pooling; without `kwargs`, 2-pooling
         is performed.
 
 ### Keyword arguments:
-+ `window=2`: pooling `window` size (same for both directions)
++ `window=2`: pooling `window` size (same for all directions)
 + `...`: See the Knet documentation for Details:
         https://denizyuret.github.io/Knet.jl/latest/reference/#Convolution-and-Pooling.
         All keywords to the Knet function `pool` are supported.
@@ -462,6 +462,34 @@ function Base.summary(l::Softmax; indent=0)
 end
 
 """
+    struct Logistic <: Layer
+
+Logistic (sigmoid) layer activation with additional
+Temperature parameter to control the slope of the curve.
+Low temperatures (such as T=0.001) result in a step-like activation 
+function,
+whereas high temperatures (such as T=10) makes the activation
+almoset linear.
+
+### Constructors:
++ `Logistic(; T=1.0)`
+"""
+struct Logistic <: Layer
+    T
+    Logistic(;T=1.0) = new(Float32(T))
+end
+(l::Logistic)(x) = sigm.(x / l.T)
+
+function Base.summary(l::Logistic; indent=0)
+    n = get_n_params(l)
+    s1 = "Logistic actication layer (T=$(l.T)),"
+    return print_summary_line(indent, s1, n)
+end
+
+
+
+
+"""
     struct Activation <: Layer
 
 Simple activation layer with the desired activation function as argument.
@@ -470,7 +498,6 @@ Simple activation layer with the desired activation function as argument.
 + `Activation(actf)`
 + `Relu()`: return an Activation layer with ReLU activation
 + `Sigm()`
-+ `Logistic()`: return an Activation layer with logistic (sigmoid) activation
 """
 struct Activation <: Layer
     actf
@@ -478,7 +505,6 @@ end
 (l::Activation)(x) = l.actf.(x)
 
 Relu() = Activation(relu)
-Logistic() = Activation(sigm)
 Sigm() = Activation(sigm)
 
 

@@ -114,3 +114,16 @@ function test_confusion_matrix()
      c = confusion_matrix(mdl, data=mb, pretty_print=true)
      return c ≈ [5 0; 0 5]
 end
+
+
+function test_mb_eval()
+
+     dat = (([1,2,3,4], [1,1,1,1]), ([1,2], [1,1]))
+     mdl(x) = ifgpu(x) .* 2
+
+     sq_err = squared_error_acc(mdl, data=dat)
+     ab_err = abs_error_acc(mdl, data=dat)
+
+     return isapprox(sq_err, 15.6667, atol=0.001) &&
+            isapprox(ab_err,  3.3333, atol=0.001)
+end

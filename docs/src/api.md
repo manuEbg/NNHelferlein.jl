@@ -60,6 +60,7 @@ PyFlat
 FeatureSelection
 Activation
 Softmax
+Logistic
 Dropout
 BatchNorm
 LayerNorm
@@ -162,11 +163,14 @@ truncate_sequence
 tb_train!
 ```
 
-# Evaluation
+# Evaluation and accuracy
 
 ```@docs
 predict
 predict_top5
+minibatch_eval
+squared_error_acc
+abs_error_acc
 hamming_dist
 peak_finder_acc
 confusion_matrix

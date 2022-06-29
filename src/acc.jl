@@ -365,3 +365,106 @@ function confusion_matrix(y, p; labels=nothing, pretty_print=true)
 end
 
 
+function mean_squared_error(y, p)
+    
+    return mean(abs2, y .- p) 
+end
+
+"""
+    function squared_error_acc(mdl; data)
+
+Return the *mean squared error* between the predictions 
+of the model `mdl` and the corresponding teaching input
+by providung the standard signature 
+`fun(model, data=iterator)`.
+
+### Arguments
++ `mdl`: model with the signature `mdl(x)` to generate predictions
+        for one minibatch (i.e. array) of data.
++ `data`: iterator, providing (x,y)-tuples of training or validation 
+        data.
+"""
+function squared_error_acc(mdl; data)
+    return minibatch_eval(mdl, mean_squared_error, data)
+end
+
+
+
+function mean_abs_error(y, p)
+    
+    return mean(abs, y .- p)
+end
+
+"""
+    function abs_error_acc(mdl; data)
+
+Return the *mean absolute error* between the predictions 
+of the model `mdl` and the corresponding teaching input
+by providung the standard signature 
+`fun(model, data=iterator)`.
+
+### Arguments
++ `mdl`: model with the signature `mdl(x)` to generate predictions
+        for one minibatch (i.e. array) of data.
++ `data`: iterator, providing (x,y)-tuples of training or validation 
+        data.
+"""
+function abs_error_acc(mdl; data)
+    return minibatch_eval(mdl, mean_abs_error, data)
+end
+
+
+
+"""
+    function minibatch_eval(mdl, fun, data; o...)
+
+Given an accuracy or loss function `fun(p, y)` that returns an accuracy
+meassure for n-dimensional arrays of predictions `p` and 
+teaching input `y` (i.e. one minibatch of data), 
+`minibatch_eval()` applies the `fun()` to all minibatches supplied by 
+the minibatch iterator `data`.
+
+### Arguments:
++ `mdl`: model to compute predictions
++ `fun`: evaluation function for one minibatch that returns the mean
+        of results for all samples of the minibatch
++ `data`: iterator that supplies a Tuple of (x,y) for 
+        each minibatch
+`o...`: all additional keyword arguments are forwarded to
+        `fun()`.
+"""
+function minibatch_eval(mdl, fun, data; o...)
+
+    # this is wrong, if the minibatches are not all
+    # of the same size:
+    # acc = [fun(mdl(x), ifgpu(y); o...) for (x,y) in data]
+    # 
+    # return average ? mean(acc) : acc
+    #
+    # better:
+    #
+    sum = cnt = 0
+    for (x,y) in data
+        mb_size = size(x)[end]
+        cnt += mb_size
+        sum += mb_size * fun(mdl(x), ifgpu(y); o...) 
+    end
+    return sum / cnt
+end
+    
+# TODO: FocalLoss
+
+# function focal_nll(scores, labels::AbstractArray{<:Integer}; 
+#             dims=1, γ=2)
+#     indices = findindices(scores,labels,dims=dims)
+#     lp = -logsoftmax(scores,dims=dims)[indices]
+#     p = softmax(scores,dims=dims)[indices]
+#     
+#     focal = exp.(1.0 .- p, γ) .* lp
+#     return sum(focal) / length(focal)
+# end
+# 
+# function focal_nll(mdl; data, dims=1)
+# 
+#     return minibatch_eval(mdl, focal_nll, data; dims=dims, γ=γ)
+# end

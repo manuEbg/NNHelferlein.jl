@@ -49,13 +49,14 @@ end
 Regression network with square loss as loss function.
 
 ### Signatures:
-    (m::Regression)(x,y) = sum(abs2, Array(m(x)) - y)
+    (m::Regression)(x,y) = mean(abs2, Array(m(x)) - y)
 """
 struct Regressor <: DNN
     layers
     Regressor(layers...) = new(Any[layers...])
 end
-(m::Regressor)(x,y) = sum(abs2, ifgpu(y) .- m(x))
+#(m::Regressor)(x,y) = mean(abs2, ifgpu(y) .- m(x))
+(m::Regressor)(x,y) = mean_squared_error(ifgpu(y), m(x))
 
 
 

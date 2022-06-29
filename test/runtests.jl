@@ -113,6 +113,7 @@ using Statistics: mean
 @test test_hamming_vocab()
 @test test_hamming_length()
 @test test_confusion_matrix()
+@test test_mb_eval()
 
 
 
