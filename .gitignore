@@ -13,9 +13,11 @@ data/MIT-normal_sinus_rhythm
 data/pretrained
 data/mnist
 test/logs
+pkg
 codecov.token
 logs
 .vscode
+.DS_Store
 try
 
 No-*
